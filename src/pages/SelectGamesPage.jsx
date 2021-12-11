@@ -1,4 +1,4 @@
-import { Card, Typography } from "@mui/material";
+import { Card, CardMedia, Typography } from "@mui/material";
 import styled from "styled-components";
 
 const StyledSelectGamesPage = styled.section`
@@ -38,9 +38,17 @@ export default function SelectGamesPage() {
             sx={{
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center",
+              justifyContent: "space-around",
             }}
           >
+            <CardMedia
+              component="div"
+              sx={{
+                height: "50%",
+                border: "1px solid",
+                boxSizing: "border-box",
+              }}
+            />
             <Typography>{game.name}</Typography>
           </Card>
         ))}
