@@ -1,5 +1,6 @@
 import { Card, CardMedia, Typography } from "@mui/material";
 import styled from "styled-components";
+import GreenLightRedLightAnimation from "./GreenLightRedLightAnimation";
 
 const StyledSelectGamesPage = styled.section`
   text-align: center;
@@ -20,12 +21,15 @@ const StyledSelectGamesPage = styled.section`
 
 export default function SelectGamesPage() {
   const games = [
-    { name: "Red Light, Green Light" },
-    { name: "Dalgona" },
-    { name: "Tug of war" },
-    { name: "Even or Odd ?" },
-    { name: "Who is nearest ?" },
-    { name: "Aim for the hole !" },
+    {
+      name: "Red Light, Green Light",
+      animation: <GreenLightRedLightAnimation />,
+    },
+    { name: "Dalgona", animation: undefined },
+    { name: "Tug of war", animation: undefined },
+    { name: "Even or Odd ?", animation: undefined },
+    { name: "Who is nearest ?", animation: undefined },
+    { name: "Aim for the hole !", animation: undefined },
   ];
 
   return (
@@ -41,14 +45,7 @@ export default function SelectGamesPage() {
               justifyContent: "space-around",
             }}
           >
-            <CardMedia
-              component="div"
-              sx={{
-                height: "50%",
-                border: "1px solid",
-                boxSizing: "border-box",
-              }}
-            />
+            <CardMedia component="div">{game.animation}</CardMedia>
             <Typography>{game.name}</Typography>
           </Card>
         ))}
