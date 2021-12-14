@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const StyledGreenLightRedLightAnimation = styled.div`
@@ -9,7 +10,7 @@ const StyledGreenLightRedLightAnimation = styled.div`
   & .guy {
     position: absolute;
     top: 30%;
-    left: 20%;
+    left: 5%;
     width: 60%;
     height: 60%;
     --head-size: 20;
@@ -45,6 +46,7 @@ const StyledGreenLightRedLightAnimation = styled.div`
       content: "";
       position: absolute;
       bottom: 100%;
+      left: 0%;
       width: 100%;
       height: 10%;
       background: black;
@@ -55,19 +57,23 @@ const StyledGreenLightRedLightAnimation = styled.div`
     position: absolute;
     height: calc(var(--arm-height) * 1%);
     width: calc(var(--arm-width) * 1%);
-    transform-origin: 50% 0%;
-    animation: 1s move-arm infinite;
+    transform-origin: 50% 10%;
     border-radius: calc(var(--body-height) * 1%) / 15%;
+    transform: rotate(-45deg);
+    animation: ${(props) => (props.run ? "1s move-arm infinite" : "")};
 
     &::after {
       content: "";
       position: absolute;
       top: 80%;
+      left: 0%;
       height: 100%;
       width: 100%;
-      border-radius: calc(var(--body-height) * 1%) / 15%;
       transform-origin: 50% 10%;
-      animation: 1s move-inferior-arm infinite;
+      transform: rotate(-67.5deg);
+      border-radius: calc(var(--body-height) * 1%) / 15%;
+      animation: ${(props) =>
+        props.run ? "1s move-inferior-arm infinite" : ""};
     }
   }
 
@@ -75,7 +81,8 @@ const StyledGreenLightRedLightAnimation = styled.div`
     background: black;
     top: 30%;
     left: 57%;
-    animation: 1s move-arm-left infinite;
+    transform: rotate(90deg);
+    animation: ${(props) => (props.run ? "1s move-arm-left infinite" : "")};
     &::after {
       background: black;
     }
@@ -103,25 +110,32 @@ const StyledGreenLightRedLightAnimation = styled.div`
       content: "";
       position: absolute;
       top: 80%;
+      left: 0%;
       height: 100%;
       width: 100%;
       border-radius: calc(var(--body-height) * 1%) / 15%;
-      transform-origin: 50% 0%;
+      transform-origin: 50% 10%;
       background-color: black;
     }
   }
 
   & .leg-left {
-    animation: 1s move-leg-left infinite;
+    transform: rotate(-90deg);
+    animation: ${(props) => (props.run ? "1s move-leg-left infinite" : "")};
     &::after {
-      animation: 1s move-inferior-leg-left infinite;
+      transform: rotate(112.5deg);
+      animation: ${(props) =>
+        props.run ? "1s move-inferior-leg-left infinite" : ""};
     }
   }
 
   & .leg-right {
-    animation: 1s move-leg-right infinite;
+    transform: rotate(45deg);
+    animation: ${(props) => (props.run ? "1s move-leg-right infinite" : "")};
     &::after {
-      animation: 1s move-inferior-leg-right infinite;
+      transform: rotate(55deg);
+      animation: ${(props) =>
+        props.run ? "1s move-inferior-leg-right infinite" : ""};
     }
   }
 
@@ -211,8 +225,24 @@ const StyledGreenLightRedLightAnimation = styled.div`
 `;
 
 export default function GreenLightRedLightAnimation() {
+  const [isRunning, setIsRunning] = useState(true);
+
+  const [toggle, setToggle] = useState();
+
+  useEffect(
+    () => {
+      setToggle(
+        setInterval(function () {
+          setIsRunning((v) => !v);
+        }, 3000)
+      );
+      return () => clearInterval(toggle);
+    }, // eslint-disable-next-line
+    [isRunning]
+  );
+
   return (
-    <StyledGreenLightRedLightAnimation>
+    <StyledGreenLightRedLightAnimation run={isRunning}>
       <div className="guy">
         <div className="head"></div>
         <div className="body"></div>

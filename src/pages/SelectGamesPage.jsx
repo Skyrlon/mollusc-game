@@ -14,7 +14,7 @@ const StyledSelectGamesPage = styled.section`
     & > * {
       margin-top: 5%;
       width: 15%;
-      height: 30%;
+      height: 40%;
     }
   }
 `;
