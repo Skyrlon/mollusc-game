@@ -42,7 +42,8 @@ export default function SelectGamesPage() {
             sx={{
               display: "flex",
               flexDirection: "column",
-              justifyContent: "space-around",
+              justifyContent: "space-evenly",
+              height: "100%",
             }}
           >
             <CardMedia component="div">{game.animation}</CardMedia>

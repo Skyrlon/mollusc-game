@@ -7,10 +7,19 @@ const StyledGreenLightRedLightAnimation = styled.div`
   width: 100%;
   height: 0;
   padding-top: 100%;
+
+  & span {
+    color: ${(props) => (props.run ? "green" : "red")};
+    font-weight: bold;
+    position: absolute;
+    right: 10%;
+    top: 20%;
+  }
+
   & .guy {
     position: absolute;
     top: 30%;
-    left: 5%;
+    left: 15%;
     width: 60%;
     height: 60%;
     --head-size: 20;
@@ -20,6 +29,7 @@ const StyledGreenLightRedLightAnimation = styled.div`
     --arm-height: 20;
     --leg-width: 20;
     --leg-height: var(--head-size) / 2;
+    --animation-speed: 0.5s;
   }
 
   & .head {
@@ -60,7 +70,8 @@ const StyledGreenLightRedLightAnimation = styled.div`
     transform-origin: 50% 10%;
     border-radius: calc(var(--body-height) * 1%) / 15%;
     transform: rotate(-45deg);
-    animation: ${(props) => (props.run ? "1s move-arm infinite" : "")};
+    animation: ${(props) =>
+      props.run ? "var(--animation-speed) move-arm infinite" : ""};
 
     &::after {
       content: "";
@@ -73,7 +84,7 @@ const StyledGreenLightRedLightAnimation = styled.div`
       transform: rotate(-67.5deg);
       border-radius: calc(var(--body-height) * 1%) / 15%;
       animation: ${(props) =>
-        props.run ? "1s move-inferior-arm infinite" : ""};
+        props.run ? "var(--animation-speed) move-inferior-arm infinite" : ""};
     }
   }
 
@@ -82,7 +93,8 @@ const StyledGreenLightRedLightAnimation = styled.div`
     top: 30%;
     left: 57%;
     transform: rotate(90deg);
-    animation: ${(props) => (props.run ? "1s move-arm-left infinite" : "")};
+    animation: ${(props) =>
+      props.run ? "var(--animation-speed) move-arm-left infinite" : ""};
     &::after {
       background: black;
     }
@@ -121,21 +133,27 @@ const StyledGreenLightRedLightAnimation = styled.div`
 
   & .leg-left {
     transform: rotate(-90deg);
-    animation: ${(props) => (props.run ? "1s move-leg-left infinite" : "")};
+    animation: ${(props) =>
+      props.run ? "var(--animation-speed) move-leg-left infinite" : ""};
     &::after {
       transform: rotate(112.5deg);
       animation: ${(props) =>
-        props.run ? "1s move-inferior-leg-left infinite" : ""};
+        props.run
+          ? "var(--animation-speed) move-inferior-leg-left infinite"
+          : ""};
     }
   }
 
   & .leg-right {
     transform: rotate(45deg);
-    animation: ${(props) => (props.run ? "1s move-leg-right infinite" : "")};
+    animation: ${(props) =>
+      props.run ? "var(--animation-speed) move-leg-right infinite" : ""};
     &::after {
       transform: rotate(55deg);
       animation: ${(props) =>
-        props.run ? "1s move-inferior-leg-right infinite" : ""};
+        props.run
+          ? "var(--animation-speed) move-inferior-leg-right infinite"
+          : ""};
     }
   }
 
@@ -234,15 +252,16 @@ export default function GreenLightRedLightAnimation() {
       setToggle(
         setInterval(function () {
           setIsRunning((v) => !v);
-        }, 3000)
+        }, 2000)
       );
       return () => clearInterval(toggle);
     }, // eslint-disable-next-line
-    [isRunning]
+    []
   );
 
   return (
     <StyledGreenLightRedLightAnimation run={isRunning}>
+      <span>{isRunning ? "GREEN LIGHT" : "RED LIGHT"}</span>
       <div className="guy">
         <div className="head"></div>
         <div className="body"></div>
