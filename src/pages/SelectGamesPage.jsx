@@ -1,6 +1,6 @@
 import { Card, CardMedia, Typography } from "@mui/material";
 import styled from "styled-components";
-import GreenLightRedLightAnimation from "./GreenLightRedLightAnimation";
+import GreenLightRedLightAnimation from "../components/GreenLightRedLightAnimation";
 
 const StyledSelectGamesPage = styled.section`
   text-align: center;
@@ -19,18 +19,24 @@ const StyledSelectGamesPage = styled.section`
   }
 `;
 
-export default function SelectGamesPage() {
+export default function SelectGamesPage({ onSelectGame }) {
   const games = [
     {
       name: "Red Light, Green Light",
       animation: <GreenLightRedLightAnimation />,
+      nameEvent: "green-light-red-light",
     },
-    { name: "Dalgona", animation: undefined },
-    { name: "Tug of war", animation: undefined },
-    { name: "Even or Odd ?", animation: undefined },
-    { name: "Who is nearest ?", animation: undefined },
-    { name: "Aim for the hole !", animation: undefined },
+    { name: "Dalgona", animation: undefined, nameEvent: null },
+    { name: "Tug of war", animation: undefined, nameEvent: null },
+    { name: "Even or Odd ?", animation: undefined, nameEvent: null },
+    { name: "Who is nearest ?", animation: undefined, nameEvent: null },
+    { name: "Aim for the hole !", animation: undefined, nameEvent: null },
   ];
+
+  const onGameClick = (gameName) => {
+    if (!!gameName) onSelectGame(gameName);
+    else return;
+  };
 
   return (
     <StyledSelectGamesPage data-testid="select-games-page">
@@ -45,6 +51,7 @@ export default function SelectGamesPage() {
               justifyContent: "space-evenly",
               height: "100%",
             }}
+            onClick={() => onGameClick(game.nameEvent)}
           >
             <CardMedia component="div">{game.animation}</CardMedia>
             <Typography>{game.name}</Typography>
