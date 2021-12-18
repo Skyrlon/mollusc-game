@@ -245,19 +245,13 @@ const StyledGreenLightRedLightAnimation = styled.div`
 export default function GreenLightRedLightAnimation() {
   const [isRunning, setIsRunning] = useState(true);
 
-  const [toggle, setToggle] = useState();
+  useEffect(() => {
+    const toggleRun = setInterval(() => {
+      setIsRunning((v) => !v);
+    }, 2000);
 
-  useEffect(
-    () => {
-      setToggle(
-        setInterval(function () {
-          setIsRunning((v) => !v);
-        }, 2000)
-      );
-      return () => clearInterval(toggle);
-    }, // eslint-disable-next-line
-    []
-  );
+    return () => clearInterval(toggleRun);
+  }, []);
 
   return (
     <StyledGreenLightRedLightAnimation run={isRunning}>
