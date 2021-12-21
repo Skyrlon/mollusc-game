@@ -43,6 +43,10 @@ const StyledGreenLightRedLight = styled.div`
   }
 `;
 
+function convertOneDigitNumberToTwo(number) {
+  return parseInt(number) < 10 ? `0${number}` : number;
+}
+
 export default function GreenLightRedLight() {
   const fieldSize = 50;
 
@@ -117,7 +121,9 @@ export default function GreenLightRedLight() {
       <span className="game-state">
         {stillPlaying &&
           startPlaying &&
-          `${Math.floor(timeLeft / 60)}:${timeLeft % 60}`}
+          `${convertOneDigitNumberToTwo(
+            Math.floor(timeLeft / 60)
+          )}:${convertOneDigitNumberToTwo(timeLeft % 60)}`}
         {won && !stillPlaying && startPlaying && "You have survived"}
         {!won && !stillPlaying && startPlaying && "You lost"}
       </span>
