@@ -63,6 +63,7 @@ export default function GreenLightRedLight() {
   const increment = useRef(null);
 
   const incrementDistance = () => {
+    setDistance((v) => v + 1);
     increment.current = setInterval(() => {
       setDistance((v) => v + 1);
     }, 100);
