@@ -128,7 +128,7 @@ export default function GreenLightRedLight() {
       </div>
 
       <Button
-        disabled={distance === fieldSize}
+        disabled={!stillPlaying}
         onMouseDown={incrementDistance}
         onMouseUp={stopIncrementDistance}
         onMouseLeave={stopIncrementDistance}
