@@ -11,6 +11,14 @@ const StyledGreenLightRedLight = styled.div`
   justify-content: center;
   align-items: center;
 
+  & .countdown-before-start {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+  }
+
   & .game-state {
     position: absolute;
     top: 0%;
@@ -50,13 +58,17 @@ function convertOneDigitNumberToTwo(number) {
 export default function GreenLightRedLight() {
   const fieldSize = 50;
 
+  const [isModalOpen, setIsModalOpen] = useState(true);
+
+  const [showTimeBeforeStart, setShowTimeBeforeStart] = useState(false);
+
+  const [timeBeforeStart, setTimeBeforeStart] = useState(3);
+
   const [startPlaying, setStartPlaying] = useState(false);
 
   const [stillPlaying, setStillPlaying] = useState(false);
 
   const [won, setWon] = useState(null);
-
-  const [isModalOpen, setIsModalOpen] = useState(true);
 
   const [timeLeft, setTimeLeft] = useState(10);
 
@@ -65,6 +77,8 @@ export default function GreenLightRedLight() {
   const countdown = useRef(null);
 
   const increment = useRef(null);
+
+  const countdownBeforeStart = useRef(null);
 
   const incrementDistance = () => {
     setDistance((v) => v + 1);
@@ -77,8 +91,17 @@ export default function GreenLightRedLight() {
     clearInterval(increment.current);
   };
 
-  const startPlay = () => {
+  const onclickStart = () => {
     setIsModalOpen(false);
+    setShowTimeBeforeStart(true);
+    countdownBeforeStart.current = setInterval(
+      () => setTimeBeforeStart((v) => v - 1),
+      1000
+    );
+    setTimeout(startPlay, 3000);
+  };
+
+  const startPlay = () => {
     countdown.current = setInterval(() => {
       setTimeLeft((v) => v - 1);
     }, 1000);
@@ -86,6 +109,7 @@ export default function GreenLightRedLight() {
     setStartPlaying(true);
   };
 
+  //Stop the game when time is over or player win
   useEffect(
     () => {
       if (timeLeft <= 0 && fieldSize - distance > 0) {
@@ -101,6 +125,16 @@ export default function GreenLightRedLight() {
     [timeLeft, distance]
   );
 
+  useEffect(
+    () => {
+      if (timeBeforeStart <= 0) {
+        setShowTimeBeforeStart(false);
+        clearInterval(countdownBeforeStart.current);
+      }
+    }, // eslint-disable-next-line
+    [timeBeforeStart]
+  );
+
   return (
     <StyledGreenLightRedLight distance={(distance / fieldSize) * 100}>
       <Modal open={isModalOpen}>
@@ -112,11 +146,15 @@ export default function GreenLightRedLight() {
             transform: "translate(-50%, -50%)",
           }}
         >
-          <Button variant="outlined" onClick={startPlay}>
+          <Button variant="outlined" onClick={onclickStart}>
             Start
           </Button>
         </Box>
       </Modal>
+
+      {showTimeBeforeStart && (
+        <span className="countdown-before-start">{timeBeforeStart}</span>
+      )}
 
       <span className="game-state">
         {stillPlaying &&
