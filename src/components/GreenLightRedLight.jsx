@@ -26,10 +26,17 @@ const StyledGreenLightRedLight = styled.div`
     font-size: 2rem;
   }
 
+  & .game-phase {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    color: ${(props) => (props.shouldMove ? "green" : "red")};
+  }
+
   & .remaining-distance {
     position: absolute;
-    top: 5%;
-    right: 25%;
+    top: 0%;
+    right: 0%;
   }
 
   & .field {
@@ -68,9 +75,13 @@ export default function GreenLightRedLight() {
 
   const [stillPlaying, setStillPlaying] = useState(false);
 
+  const [shouldMove, setShouldMove] = useState(false);
+
+  const toggleGamePhases = useRef(null);
+
   const [won, setWon] = useState(null);
 
-  const [timeLeft, setTimeLeft] = useState(10);
+  const [timeLeft, setTimeLeft] = useState(61);
 
   const [distance, setDistance] = useState(0);
 
@@ -107,6 +118,7 @@ export default function GreenLightRedLight() {
     }, 1000);
     setStillPlaying(true);
     setStartPlaying(true);
+    setShouldMove(true);
   };
 
   //Stop the game when time is over or player win
@@ -135,8 +147,30 @@ export default function GreenLightRedLight() {
     [timeBeforeStart]
   );
 
+  useEffect(
+    () => {
+      clearTimeout(toggleGamePhases.current);
+      if (shouldMove) {
+        const randomDuration = Math.random() * (10000 - 5000) + 5000;
+        toggleGamePhases.current = setTimeout(
+          () => setShouldMove((v) => !v),
+          randomDuration
+        );
+      } else {
+        toggleGamePhases.current = setTimeout(
+          () => setShouldMove((v) => !v),
+          5000
+        );
+      }
+    }, // eslint-disable-next-line
+    [shouldMove]
+  );
+
   return (
-    <StyledGreenLightRedLight distance={(distance / fieldSize) * 100}>
+    <StyledGreenLightRedLight
+      distance={(distance / fieldSize) * 100}
+      shouldMove={shouldMove}
+    >
       <Modal open={isModalOpen}>
         <Box
           sx={{
@@ -166,9 +200,13 @@ export default function GreenLightRedLight() {
         {!won && !stillPlaying && startPlaying && "You lost"}
       </span>
 
-      <span className="remaining-distance">Still {fieldSize - distance}m</span>
-
       <div className="field">
+        <div className="game-phase">
+          {shouldMove ? "Green Light" : "Red Light"}
+        </div>
+        <span className="remaining-distance">
+          Still {fieldSize - distance}m
+        </span>
         <div className="player" data-testid="player"></div>
       </div>
 
