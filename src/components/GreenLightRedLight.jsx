@@ -128,13 +128,25 @@ export default function GreenLightRedLight() {
         setStillPlaying(false);
         setWon(false);
         clearInterval(countdown.current);
-      } else if (timeLeft > 0 && fieldSize - distance <= 0) {
+      }
+      if (timeLeft > 0 && fieldSize - distance <= 0) {
         setStillPlaying(false);
         setWon(true);
         clearInterval(countdown.current);
       }
     }, // eslint-disable-next-line
     [timeLeft, distance]
+  );
+
+  useEffect(
+    () => {
+      if (!shouldMove) {
+        setStillPlaying(false);
+        setWon(false);
+        clearInterval(countdown.current);
+      }
+    }, // eslint-disable-next-line
+    [distance]
   );
 
   useEffect(
