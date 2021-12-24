@@ -16,7 +16,7 @@ const StyledGreenLightRedLight = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 2rem;
+    font-size: 5rem;
   }
 
   & .game-state {
@@ -63,7 +63,7 @@ function convertOneDigitNumberToTwo(number) {
 }
 
 export default function GreenLightRedLight() {
-  const fieldSize = 50;
+  const fieldSize = 100;
 
   const [isModalOpen, setIsModalOpen] = useState(true);
 
@@ -91,6 +91,7 @@ export default function GreenLightRedLight() {
 
   const countdownBeforeStart = useRef(null);
 
+  //Move the player
   const incrementDistance = () => {
     setDistance((v) => v + 1);
     increment.current = setInterval(() => {
@@ -98,10 +99,12 @@ export default function GreenLightRedLight() {
     }, 100);
   };
 
+  //Stop the player
   const stopIncrementDistance = () => {
     clearInterval(increment.current);
   };
 
+  //Close modal, start countdown before the game start
   const onclickStart = () => {
     setIsModalOpen(false);
     setShowTimeBeforeStart(true);
@@ -112,6 +115,7 @@ export default function GreenLightRedLight() {
     setTimeout(startPlay, 3000);
   };
 
+  //Start game countdown, authorize player to click on "Run" button
   const startPlay = () => {
     countdown.current = setInterval(() => {
       setTimeLeft((v) => v - 1);
@@ -138,6 +142,7 @@ export default function GreenLightRedLight() {
     [timeLeft, distance]
   );
 
+  //Each time player moves, check if they are authorized to move
   useEffect(
     () => {
       if (!shouldMove) {
@@ -149,6 +154,7 @@ export default function GreenLightRedLight() {
     [distance]
   );
 
+  //When the countdown before the game start reach 0, hide and clear it
   useEffect(
     () => {
       if (timeBeforeStart <= 0) {
@@ -159,6 +165,7 @@ export default function GreenLightRedLight() {
     [timeBeforeStart]
   );
 
+  //Each time game phase changes, clear the time out and set another one with same delay for red light and random one for green light
   useEffect(
     () => {
       clearTimeout(toggleGamePhases.current);
@@ -223,6 +230,7 @@ export default function GreenLightRedLight() {
       </div>
 
       <Button
+        variant="contained"
         disabled={!stillPlaying}
         onMouseDown={incrementDistance}
         onMouseUp={stopIncrementDistance}
