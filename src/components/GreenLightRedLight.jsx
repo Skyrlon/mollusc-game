@@ -3,6 +3,8 @@ import { Box } from "@mui/system";
 import { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 
+import GameCountdown from "./GameCountdown";
+
 const StyledGreenLightRedLight = styled.div`
   width: 100%;
   height: 100%;
@@ -58,12 +60,10 @@ const StyledGreenLightRedLight = styled.div`
   }
 `;
 
-function convertOneDigitNumberToTwo(number) {
-  return parseInt(number) < 10 ? `0${number}` : number;
-}
-
 export default function GreenLightRedLight() {
   const fieldSize = 100;
+
+  const time = 10;
 
   const [isModalOpen, setIsModalOpen] = useState(true);
 
@@ -81,11 +81,9 @@ export default function GreenLightRedLight() {
 
   const [won, setWon] = useState(null);
 
-  const [timeLeft, setTimeLeft] = useState(61);
+  const [timesUp, setIsTimesUp] = useState(null);
 
   const [distance, setDistance] = useState(0);
-
-  const countdown = useRef(null);
 
   const increment = useRef(null);
 
@@ -117,9 +115,6 @@ export default function GreenLightRedLight() {
 
   //Start game countdown, authorize player to click on "Run" button
   const startPlay = () => {
-    countdown.current = setInterval(() => {
-      setTimeLeft((v) => v - 1);
-    }, 1000);
     setStillPlaying(true);
     setStartPlaying(true);
     setShouldMove(true);
@@ -128,18 +123,16 @@ export default function GreenLightRedLight() {
   //Stop the game when time is over or player win
   useEffect(
     () => {
-      if (timeLeft <= 0 && fieldSize - distance > 0) {
+      if (timesUp && fieldSize - distance > 0) {
         setStillPlaying(false);
         setWon(false);
-        clearInterval(countdown.current);
       }
-      if (timeLeft > 0 && fieldSize - distance <= 0) {
+      if (!timesUp && fieldSize - distance <= 0) {
         setStillPlaying(false);
         setWon(true);
-        clearInterval(countdown.current);
       }
     }, // eslint-disable-next-line
-    [timeLeft, distance]
+    [timesUp, distance]
   );
 
   //Each time player moves, check if they are authorized to move
@@ -148,7 +141,6 @@ export default function GreenLightRedLight() {
       if (!shouldMove) {
         setStillPlaying(false);
         setWon(false);
-        clearInterval(countdown.current);
       }
     }, // eslint-disable-next-line
     [distance]
@@ -210,11 +202,9 @@ export default function GreenLightRedLight() {
       )}
 
       <span className="game-state">
-        {stillPlaying &&
-          startPlaying &&
-          `${convertOneDigitNumberToTwo(
-            Math.floor(timeLeft / 60)
-          )}:${convertOneDigitNumberToTwo(timeLeft % 60)}`}
+        {stillPlaying && startPlaying && (
+          <GameCountdown time={time} timesUp={() => setIsTimesUp(true)} />
+        )}
         {won && !stillPlaying && startPlaying && "You have survived"}
         {!won && !stillPlaying && startPlaying && "You lost"}
       </span>
