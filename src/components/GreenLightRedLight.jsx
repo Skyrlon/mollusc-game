@@ -1,9 +1,6 @@
-import { Button, Modal } from "@mui/material";
-import { Box } from "@mui/system";
 import { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
-
-import GameCountdown from "./GameCountdown";
+import { Button } from "@mui/material";
 
 const StyledGreenLightRedLight = styled.div`
   width: 100%;
@@ -12,21 +9,6 @@ const StyledGreenLightRedLight = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
-  & .countdown-before-start {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 5rem;
-  }
-
-  & .game-state {
-    position: absolute;
-    top: 0%;
-    left: 45%;
-    font-size: 2rem;
-  }
 
   & .game-phase {
     position: absolute;
@@ -60,34 +42,21 @@ const StyledGreenLightRedLight = styled.div`
   }
 `;
 
-export default function GreenLightRedLight() {
+export default function GreenLightRedLight({
+  timesUp,
+  gameOver,
+  startPlay,
+  stillPlay,
+}) {
   const fieldSize = 100;
-
-  const time = 10;
-
-  const [isModalOpen, setIsModalOpen] = useState(true);
-
-  const [showTimeBeforeStart, setShowTimeBeforeStart] = useState(false);
-
-  const [timeBeforeStart, setTimeBeforeStart] = useState(3);
-
-  const [startPlaying, setStartPlaying] = useState(false);
-
-  const [stillPlaying, setStillPlaying] = useState(false);
 
   const [shouldMove, setShouldMove] = useState(false);
 
   const toggleGamePhases = useRef(null);
 
-  const [won, setWon] = useState(null);
-
-  const [timesUp, setIsTimesUp] = useState(null);
-
   const [distance, setDistance] = useState(0);
 
   const increment = useRef(null);
-
-  const countdownBeforeStart = useRef(null);
 
   //Move the player
   const incrementDistance = () => {
@@ -102,34 +71,14 @@ export default function GreenLightRedLight() {
     clearInterval(increment.current);
   };
 
-  //Close modal, start countdown before the game start
-  const onclickStart = () => {
-    setIsModalOpen(false);
-    setShowTimeBeforeStart(true);
-    countdownBeforeStart.current = setInterval(
-      () => setTimeBeforeStart((v) => v - 1),
-      1000
-    );
-    setTimeout(startPlay, 3000);
-  };
-
-  //Start game countdown, authorize player to click on "Run" button
-  const startPlay = () => {
-    setStillPlaying(true);
-    setStartPlaying(true);
-    setShouldMove(true);
-  };
-
   //Stop the game when time is over or player win
   useEffect(
     () => {
       if (timesUp && fieldSize - distance > 0) {
-        setStillPlaying(false);
-        setWon(false);
+        gameOver({ win: false });
       }
       if (!timesUp && fieldSize - distance <= 0) {
-        setStillPlaying(false);
-        setWon(true);
+        gameOver({ win: true });
       }
     }, // eslint-disable-next-line
     [timesUp, distance]
@@ -139,23 +88,18 @@ export default function GreenLightRedLight() {
   useEffect(
     () => {
       if (!shouldMove) {
-        setStillPlaying(false);
-        setWon(false);
+        gameOver({ win: false });
       }
     }, // eslint-disable-next-line
     [distance]
   );
 
-  //When the countdown before the game start reach 0, hide and clear it
-  useEffect(
-    () => {
-      if (timeBeforeStart <= 0) {
-        setShowTimeBeforeStart(false);
-        clearInterval(countdownBeforeStart.current);
-      }
-    }, // eslint-disable-next-line
-    [timeBeforeStart]
-  );
+  //Player can move when countdown before the start ends
+  useEffect(() => {
+    if (startPlay) {
+      setShouldMove(true);
+    }
+  }, [startPlay]);
 
   //Each time game phase changes, clear the time out and set another one with same delay for red light and random one for green light
   useEffect(
@@ -182,37 +126,12 @@ export default function GreenLightRedLight() {
       distance={(distance / fieldSize) * 100}
       shouldMove={shouldMove}
     >
-      <Modal open={isModalOpen}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-          }}
-        >
-          <Button variant="outlined" onClick={onclickStart}>
-            Start
-          </Button>
-        </Box>
-      </Modal>
-
-      {showTimeBeforeStart && (
-        <span className="countdown-before-start">{timeBeforeStart}</span>
-      )}
-
-      <span className="game-state">
-        {stillPlaying && startPlaying && (
-          <GameCountdown time={time} timesUp={() => setIsTimesUp(true)} />
-        )}
-        {won && !stillPlaying && startPlaying && "You have survived"}
-        {!won && !stillPlaying && startPlaying && "You lost"}
-      </span>
-
       <div className="field">
-        <div className="game-phase">
-          {shouldMove ? "Green Light" : "Red Light"}
-        </div>
+        {startPlay && stillPlay && (
+          <div className="game-phase">
+            {shouldMove ? "Green Light" : "Red Light"}
+          </div>
+        )}
         <span className="remaining-distance">
           Still {fieldSize - distance}m
         </span>
@@ -221,7 +140,7 @@ export default function GreenLightRedLight() {
 
       <Button
         variant="contained"
-        disabled={!stillPlaying}
+        disabled={!stillPlay}
         onMouseDown={incrementDistance}
         onMouseUp={stopIncrementDistance}
         onMouseLeave={stopIncrementDistance}
