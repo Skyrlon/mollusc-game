@@ -87,17 +87,18 @@ export default function GreenLightRedLight({
   //Each time player moves, check if they are authorized to move
   useEffect(
     () => {
-      if (!shouldMove) {
+      if (!shouldMove && startPlay) {
         gameOver({ win: false });
       }
     }, // eslint-disable-next-line
     [distance]
   );
 
-  //Player can move when countdown before the start ends
+  //Player can move when countdown before the start ends, and reset distance when player restart the game
   useEffect(() => {
     if (startPlay) {
       setShouldMove(true);
+      setDistance(0);
     }
   }, [startPlay]);
 
@@ -135,7 +136,7 @@ export default function GreenLightRedLight({
         <span className="remaining-distance">
           Still {fieldSize - distance}m
         </span>
-        <div className="player" data-testid="player"></div>
+        {startPlay && <div className="player" data-testid="player"></div>}
       </div>
 
       <Button

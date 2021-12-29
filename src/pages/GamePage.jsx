@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState, useRef, useEffect } from "react";
 import GreenLightRedLight from "../components/GreenLightRedLight";
 import GameCountdown from "../components/GameCountdown";
-import { Button, Modal } from "@mui/material";
+import { Button, Modal, Typography, ButtonGroup } from "@mui/material";
 import { Box } from "@mui/system";
 
 const StyledGamePage = styled.div`
@@ -25,7 +25,7 @@ const StyledGamePage = styled.div`
   }
 `;
 
-export default function GamePage({ game }) {
+export default function GamePage({ game, stopPlaying }) {
   const gamesTime = [{ name: "green-light-red-light", time: 61 }];
 
   const [isModalOpen, setIsModalOpen] = useState(true);
@@ -45,7 +45,7 @@ export default function GamePage({ game }) {
   const countdownBeforeStart = useRef(null);
 
   //Close modal, start countdown before the game start
-  const onclickStart = () => {
+  const onClickStart = () => {
     setIsModalOpen(false);
     setShowTimeBeforeStart(true);
     countdownBeforeStart.current = setInterval(
@@ -53,6 +53,25 @@ export default function GamePage({ game }) {
       1000
     );
     setTimeout(startPlay, 3000);
+  };
+
+  const onClickRestart = () => {
+    setIsModalOpen(false);
+    setShowTimeBeforeStart(true);
+    setTimeBeforeStart(3);
+    setWon(null);
+    countdownBeforeStart.current = setInterval(
+      () => setTimeBeforeStart((v) => v - 1),
+      1000
+    );
+    setTimeout(startPlay, 3000);
+  };
+
+  const handleGameOver = (payload) => {
+    setWon(payload.win);
+    setStartPlaying(false);
+    setStillPlaying(false);
+    setIsModalOpen(true);
   };
 
   //Start game countdown, authorize player to click on "Run" button
@@ -78,14 +97,35 @@ export default function GamePage({ game }) {
         <Box
           sx={{
             position: "absolute",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
           }}
         >
-          <Button variant="outlined" onClick={onclickStart}>
-            Start
-          </Button>
+          {won && !stillPlaying && <Typography>You have survived</Typography>}
+          {!won && won !== null && !stillPlaying && (
+            <Typography>You lost</Typography>
+          )}
+          <ButtonGroup>
+            {won === null && (
+              <Button variant="outlined" onClick={onClickStart}>
+                Start
+              </Button>
+            )}
+            {won !== null && (
+              <Button variant="outlined" onClick={onClickRestart}>
+                Restart
+              </Button>
+            )}
+            {won !== null && (
+              <Button variant="outlined" onClick={stopPlaying}>
+                Go back to select others games
+              </Button>
+            )}
+          </ButtonGroup>
         </Box>
       </Modal>
 
@@ -100,17 +140,12 @@ export default function GamePage({ game }) {
             timesUp={() => setIsTimeUp(true)}
           />
         )}
-        {won && !stillPlaying && startPlaying && "You have survived"}
-        {!won && !stillPlaying && startPlaying && "You lost"}
       </span>
 
       {game === "green-light-red-light" && (
         <GreenLightRedLight
           timesUp={isTimeUp}
-          gameOver={(payload) => {
-            setWon(payload.win);
-            setStillPlaying(false);
-          }}
+          gameOver={handleGameOver}
           startPlay={startPlaying}
           stillPlay={stillPlaying}
         />

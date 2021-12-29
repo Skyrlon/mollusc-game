@@ -17,7 +17,15 @@ export default function App() {
           }}
         />
       )}
-      {isPlaying && currentGame && <GamePage game={currentGame} />}
+      {isPlaying && !!currentGame && (
+        <GamePage
+          game={currentGame}
+          stopPlaying={() => {
+            setIsPlaying(false);
+            setCurrentGame(null);
+          }}
+        />
+      )}
     </div>
   );
 }

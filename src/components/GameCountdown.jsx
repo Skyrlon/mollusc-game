@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 
-
 function convertOneDigitNumberToTwo(number) {
   return parseInt(number) < 10 ? `0${number}` : number;
 }
@@ -19,7 +18,9 @@ export default function GameCountdown({ time, timesUp }) {
 
   useEffect(
     () => {
-      if (timeLeft <= 0) timesUp();
+      if (timeLeft <= 0) {
+        timesUp();
+      }
     },
     // eslint-disable-next-line
     [timeLeft]
