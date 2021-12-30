@@ -118,6 +118,7 @@ export default function GreenLightRedLight({
           5000
         );
       }
+      return () => clearTimeout(toggleGamePhases.current);
     }, // eslint-disable-next-line
     [shouldMove]
   );
