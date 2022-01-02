@@ -16,14 +16,11 @@ const StyledSelectGamesPage = styled.section`
   article {
     display: flex;
     flex-direction: row;
-    width: 100%;
-    height: 100vh;
     justify-content: space-around;
+    width: 100%;
 
     & > * {
-      margin-top: 5%;
-      width: 15%;
-      height: 40%;
+      flex: 1 1 10px;
     }
   }
 `;
@@ -88,20 +85,25 @@ export default function SelectGamesPage({ onSelectGame }) {
         {games.map((game) => (
           <Card
             key={game.name}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-evenly",
-              height: "100%",
-            }}
+            sx={{ maxWidth: "14%", marginTop: "5%" }}
             onClick={() => onGameClick(game.nameEvent)}
           >
-            <CardMedia component="div">{game.animation}</CardMedia>
-            <Typography>{game.name}</Typography>
+            <CardMedia
+              sx={{ paddingTop: "1rem", paddingBottom: "1rem" }}
+              component="div"
+            >
+              {game.animation}
+            </CardMedia>
+            <Typography sx={{ paddingTop: "1rem", paddingBottom: "1rem" }}>
+              {game.name}
+            </Typography>
             <CardActions>
-              <ExpandMoreIcon onClick={handleExpandClick} />
+              <ExpandMoreIcon
+                sx={{ marginLeft: "auto" }}
+                onClick={handleExpandClick}
+              />
             </CardActions>
-            <Collapse in={showDescription}>
+            <Collapse in={showDescription} timeout="auto">
               <CardContent>
                 <Typography>{game.description}</Typography>
               </CardContent>
