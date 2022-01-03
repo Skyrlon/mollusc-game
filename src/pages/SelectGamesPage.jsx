@@ -1,15 +1,6 @@
-import {
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Collapse,
-  Typography,
-} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import styled from "styled-components";
 import GreenLightRedLightAnimation from "../components/GreenLightRedLightAnimation";
-import { useState } from "react";
+import GameCard from "../components/GameCard";
 
 const StyledSelectGamesPage = styled.section`
   text-align: center;
@@ -19,8 +10,11 @@ const StyledSelectGamesPage = styled.section`
     justify-content: space-around;
     width: 100%;
 
-    & > * {
+    & .game-card {
+      position: relative;
       flex: 1 1 10px;
+      max-width: 14%;
+      margin-top: 5%;
     }
   }
 `;
@@ -66,16 +60,9 @@ export default function SelectGamesPage({ onSelectGame }) {
     },
   ];
 
-  const [showDescription, setShowDescription] = useState(false);
-
-  const onGameClick = (gameName) => {
+  const handleSelectGame = (gameName) => {
     if (!!gameName) onSelectGame(gameName);
     else return;
-  };
-
-  const handleExpandClick = (e) => {
-    e.stopPropagation();
-    setShowDescription((v) => !v);
   };
 
   return (
@@ -83,32 +70,13 @@ export default function SelectGamesPage({ onSelectGame }) {
       <h2>Choose your game !</h2>
       <article>
         {games.map((game) => (
-          <Card
-            key={game.name}
-            sx={{ maxWidth: "14%", marginTop: "5%" }}
-            onClick={() => onGameClick(game.nameEvent)}
-          >
-            <CardMedia
-              sx={{ paddingTop: "1rem", paddingBottom: "1rem" }}
-              component="div"
-            >
-              {game.animation}
-            </CardMedia>
-            <Typography sx={{ paddingTop: "1rem", paddingBottom: "1rem" }}>
-              {game.name}
-            </Typography>
-            <CardActions>
-              <ExpandMoreIcon
-                sx={{ marginLeft: "auto" }}
-                onClick={handleExpandClick}
-              />
-            </CardActions>
-            <Collapse in={showDescription} timeout="auto">
-              <CardContent>
-                <Typography>{game.description}</Typography>
-              </CardContent>
-            </Collapse>
-          </Card>
+          <div className="game-card">
+            <GameCard
+              key={game.name}
+              game={game}
+              onSelectGame={handleSelectGame}
+            />
+          </div>
         ))}
       </article>
     </StyledSelectGamesPage>
