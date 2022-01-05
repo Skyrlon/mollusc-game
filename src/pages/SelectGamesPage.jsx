@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import GreenLightRedLightAnimation from "../components/GreenLightRedLightAnimation";
 import GameCard from "../components/GameCard";
+import DalgonaAnimation from "../components/DalgonaAnimation";
 
 const StyledSelectGamesPage = styled.section`
   text-align: center;
@@ -31,7 +32,7 @@ export default function SelectGamesPage({ onSelectGame }) {
     },
     {
       name: "Dalgona",
-      animation: undefined,
+      animation: <DalgonaAnimation />,
       nameEvent: null,
       description: "Cut around the shape without break it",
     },
