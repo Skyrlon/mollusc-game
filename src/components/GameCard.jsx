@@ -9,10 +9,10 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useState } from "react";
 
-export default function GameCard({ game }) {
+export default function GameCard({ game, onSelectGame }) {
   const [showDescription, setShowDescription] = useState(false);
 
-  const onCardClick = ({ gameName, onSelectGame }) => {
+  const onCardClick = (gameName) => {
     if (!!gameName) onSelectGame(gameName);
     else return;
   };

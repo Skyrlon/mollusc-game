@@ -33,7 +33,7 @@ export default function SelectGamesPage({ onSelectGame }) {
     {
       name: "Dalgona",
       animation: <DalgonaAnimation />,
-      nameEvent: null,
+      nameEvent: "dalgona",
       description: "Cut around the shape without break it",
     },
     {

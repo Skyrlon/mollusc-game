@@ -30,7 +30,7 @@ export default function DalgonaAnimation() {
     <StyledDalgonaAnimation>
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <circle
-          class="circle"
+          className="circle"
           cx="50"
           cy="50"
           r="30"
@@ -38,7 +38,7 @@ export default function DalgonaAnimation() {
           fill="transparent"
         />
         <circle
-          class="circle circle-front"
+          className="circle circle-front"
           cx="50"
           cy="50"
           r="30"

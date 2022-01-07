@@ -4,6 +4,7 @@ import GreenLightRedLight from "../components/GreenLightRedLight";
 import GameCountdown from "../components/GameCountdown";
 import { Button, Modal, Typography, ButtonGroup } from "@mui/material";
 import { Box } from "@mui/system";
+import Dalgona from "../components/Dalgona";
 
 const StyledGamePage = styled.div`
   width: 100vw;
@@ -26,7 +27,10 @@ const StyledGamePage = styled.div`
 `;
 
 export default function GamePage({ game, stopPlaying }) {
-  const gamesTime = [{ name: "green-light-red-light", time: 61 }];
+  const gamesTime = [
+    { name: "green-light-red-light", time: 61 },
+    { name: "dalgona", time: 61 },
+  ];
 
   const [isModalOpen, setIsModalOpen] = useState(true);
 
@@ -150,6 +154,7 @@ export default function GamePage({ game, stopPlaying }) {
           stillPlay={stillPlaying}
         />
       )}
+      {game === "dalgona" && startPlaying && <Dalgona />}
     </StyledGamePage>
   );
 }
