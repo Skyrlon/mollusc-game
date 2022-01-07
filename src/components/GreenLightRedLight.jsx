@@ -42,12 +42,7 @@ const StyledGreenLightRedLight = styled.div`
   }
 `;
 
-export default function GreenLightRedLight({
-  timesUp,
-  gameOver,
-  startPlay,
-  stillPlay,
-}) {
+export default function GreenLightRedLight({ gameOver, startPlay, stillPlay }) {
   const fieldSize = 100;
 
   const [shouldMove, setShouldMove] = useState(false);
@@ -74,14 +69,11 @@ export default function GreenLightRedLight({
   //Stop the game when time is over or player win
   useEffect(
     () => {
-      if (timesUp && fieldSize - distance > 0) {
-        gameOver({ win: false });
-      }
-      if (!timesUp && fieldSize - distance <= 0) {
+      if (fieldSize - distance <= 0) {
         gameOver({ win: true });
       }
     }, // eslint-disable-next-line
-    [timesUp, distance]
+    [distance]
   );
 
   //Each time player moves, check if they are authorized to move

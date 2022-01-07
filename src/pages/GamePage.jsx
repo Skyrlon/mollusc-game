@@ -44,8 +44,6 @@ export default function GamePage({ game, stopPlaying }) {
 
   const [showTimeBeforeStart, setShowTimeBeforeStart] = useState(false);
 
-  const [isTimeUp, setIsTimeUp] = useState(false);
-
   const countdownBeforeStart = useRef(null);
 
   //Close modal, start countdown before the game start
@@ -82,6 +80,13 @@ export default function GamePage({ game, stopPlaying }) {
   const startPlay = () => {
     setStartPlaying(true);
     setStillPlaying(true);
+  };
+
+  const handleTimesUp = () => {
+    setWon(false);
+    setStartPlaying(false);
+    setStillPlaying(false);
+    setIsModalOpen(true);
   };
 
   //When the countdown before the game start reach 0, hide and clear it
@@ -141,14 +146,13 @@ export default function GamePage({ game, stopPlaying }) {
         {startPlaying && stillPlaying && (
           <GameCountdown
             time={gamesTime.find((x) => x.name === game).time}
-            timesUp={() => setIsTimeUp(true)}
+            timesUp={handleTimesUp}
           />
         )}
       </span>
 
       {game === "green-light-red-light" && (
         <GreenLightRedLight
-          timesUp={isTimeUp}
           gameOver={handleGameOver}
           startPlay={startPlaying}
           stillPlay={stillPlaying}
