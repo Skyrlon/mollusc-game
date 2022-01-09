@@ -3,7 +3,8 @@ import { ReactComponent as CircleIcon } from "../assets/circle.svg";
 import { ReactComponent as StarIcon } from "../assets/star.svg";
 import { ReactComponent as TriangleIcon } from "../assets/triangle.svg";
 import { ReactComponent as UmbrellaIcon } from "../assets/umbrella.svg";
-import { Card } from "@mui/material";
+
+import DalgonaCard from "./DalgonaCard";
 
 const StyledDalgona = styled.div`
   width: 100%;
@@ -12,14 +13,6 @@ const StyledDalgona = styled.div`
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-
-  & .icon {
-    padding-top: 10rem;
-    padding-bottom: 10rem;
-    & svg {
-      transform: scale(0.8);
-    }
-  }
 `;
 
 export default function Dalgona() {
@@ -54,9 +47,7 @@ export default function Dalgona() {
   return (
     <StyledDalgona>
       {cards().map((card) => (
-        <Card key={card.position} sx={{ maxWidth: "15%" }}>
-          <div className="icon">{card.component}</div>
-        </Card>
+        <DalgonaCard key={card.position} card={card} />
       ))}
     </StyledDalgona>
   );
