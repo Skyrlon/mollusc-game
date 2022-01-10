@@ -1,4 +1,3 @@
-import { useState } from "react";
 import styled from "styled-components";
 
 const StyledDalgonaCard = styled.div`
@@ -42,14 +41,12 @@ const StyledDalgonaCard = styled.div`
   }
 `;
 
-export default function DalgonaCard({ card }) {
-  const [showRecto, setShowRecto] = useState(false);
-
+export default function DalgonaCard({ card, showRecto, onCardClick }) {
   return (
     <StyledDalgonaCard
       showRecto={showRecto}
       key={card.position}
-      onClick={() => setShowRecto((v) => !v)}
+      onClick={() => onCardClick(card.position)}
     >
       <div className="face recto">
         <div className="icon">{card.component}</div>

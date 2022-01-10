@@ -4,15 +4,11 @@ import { ReactComponent as StarIcon } from "../assets/star.svg";
 import { ReactComponent as TriangleIcon } from "../assets/triangle.svg";
 import { ReactComponent as UmbrellaIcon } from "../assets/umbrella.svg";
 
-import DalgonaCard from "./DalgonaCard";
+import DalgonaCards from "./DalgonaCards";
 
 const StyledDalgona = styled.div`
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
 `;
 
 export default function Dalgona() {
@@ -46,9 +42,7 @@ export default function Dalgona() {
 
   return (
     <StyledDalgona>
-      {cards().map((card) => (
-        <DalgonaCard key={card.position} card={card} />
-      ))}
+      <DalgonaCards cards={cards()} />
     </StyledDalgona>
   );
 }
