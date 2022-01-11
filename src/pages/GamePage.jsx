@@ -49,12 +49,16 @@ export default function GamePage({ game, stopPlaying }) {
   //Close modal, start countdown before the game start
   const onClickStart = () => {
     setIsModalOpen(false);
-    setShowTimeBeforeStart(true);
-    countdownBeforeStart.current = setInterval(
-      () => setTimeBeforeStart((v) => v - 1),
-      1000
-    );
-    setTimeout(startPlay, 3000);
+    if (game !== "dalgona") {
+      setShowTimeBeforeStart(true);
+      countdownBeforeStart.current = setInterval(
+        () => setTimeBeforeStart((v) => v - 1),
+        1000
+      );
+      setTimeout(startPlay, 3000);
+    } else {
+      startPlay();
+    }
   };
 
   const onClickRestart = () => {
@@ -76,10 +80,12 @@ export default function GamePage({ game, stopPlaying }) {
     setIsModalOpen(true);
   };
 
-  //Start game countdown, authorize player to click on "Run" button
+  //Start game
   const startPlay = () => {
     setStartPlaying(true);
-    setStillPlaying(true);
+    if (game !== "dalgona") {
+      setStillPlaying(true);
+    }
   };
 
   const handleTimesUp = () => {
@@ -158,7 +164,9 @@ export default function GamePage({ game, stopPlaying }) {
           stillPlay={stillPlaying}
         />
       )}
-      {game === "dalgona" && startPlaying && <Dalgona />}
+      {game === "dalgona" && startPlaying && (
+        <Dalgona startTheGame={() => setStillPlaying(true)} />
+      )}
     </StyledGamePage>
   );
 }

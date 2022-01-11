@@ -11,7 +11,7 @@ const StyledDalgona = styled.div`
   height: 100%;
 `;
 
-export default function Dalgona() {
+export default function Dalgona({ startTheGame }) {
   const cards = () => {
     const icons = [
       { component: <CircleIcon />, position: null },
@@ -42,7 +42,7 @@ export default function Dalgona() {
 
   return (
     <StyledDalgona>
-      <DalgonaCards cards={cards()} />
+      <DalgonaCards cards={cards()} cardChosen={startTheGame} />
     </StyledDalgona>
   );
 }

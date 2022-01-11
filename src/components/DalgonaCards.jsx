@@ -11,7 +11,9 @@ const StyledDalgonaCards = styled.div`
   align-items: center;
 `;
 
-export default function DalgonaCards({ cards }) {
+export default function DalgonaCards({ cards, cardChosen }) {
+  const [chosenCardPosition, setChosenCardPosition] = useState(null);
+
   const [showCardsRecto, setShowCardsRecto] = useState(
     cards.map((card) => {
       return { position: card.position, showRecto: false };
@@ -29,15 +31,17 @@ export default function DalgonaCards({ cards }) {
     );
 
     //Then shows the others cards' recto after 1s
-    setTimeout(
-      () =>
-        setShowCardsRecto(
-          showCardsRecto.map((x) => {
-            return { ...x, showRecto: true };
-          })
-        ),
-      1000
-    );
+    setTimeout(() => {
+      setShowCardsRecto(
+        showCardsRecto.map((x) => {
+          return { ...x, showRecto: true };
+        })
+      );
+      setChosenCardPosition(cardClickedPosition);
+    }, 1000);
+
+    //Trigger begenning of the game
+    setTimeout(cardChosen, 3000);
   };
 
   return (
@@ -46,6 +50,7 @@ export default function DalgonaCards({ cards }) {
         <DalgonaCard
           key={card.position}
           card={card}
+          isChosenCard={chosenCardPosition === card.position}
           showRecto={
             showCardsRecto.find((x) => x.position === card.position).showRecto
           }

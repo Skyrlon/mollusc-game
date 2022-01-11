@@ -21,6 +21,7 @@ const StyledDalgonaCard = styled.div`
 
     &.recto {
       background: white;
+      box-shadow: ${(props) => (props.chosenCard ? "0px 0px 50px red" : "")};
     }
 
     &.verso {
@@ -41,9 +42,15 @@ const StyledDalgonaCard = styled.div`
   }
 `;
 
-export default function DalgonaCard({ card, showRecto, onCardClick }) {
+export default function DalgonaCard({
+  card,
+  showRecto,
+  onCardClick,
+  isChosenCard,
+}) {
   return (
     <StyledDalgonaCard
+      chosenCard={isChosenCard}
       showRecto={showRecto}
       key={card.position}
       onClick={() => onCardClick(card.position)}
