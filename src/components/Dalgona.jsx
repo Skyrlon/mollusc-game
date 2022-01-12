@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { ReactComponent as CircleIcon } from "../assets/circle.svg";
 import { ReactComponent as StarIcon } from "../assets/star.svg";
@@ -12,14 +13,17 @@ const StyledDalgona = styled.div`
 `;
 
 export default function Dalgona({ startTheGame }) {
-  const cards = () => {
-    const icons = [
-      { component: <CircleIcon />, position: null },
-      { component: <StarIcon />, position: null },
-      { component: <TriangleIcon />, position: null },
-      { component: <UmbrellaIcon />, position: null },
-    ];
-    let newIcons = icons;
+  const [cards, setCards] = useState([
+    { component: <CircleIcon />, position: null, name: "circle" },
+    { component: <StarIcon />, position: null, name: "star" },
+    { component: <TriangleIcon />, position: null, name: "triangle" },
+    { component: <UmbrellaIcon />, position: null, name: "umbrella" },
+  ]);
+
+  const [isCardsShuffled, setIsCardsShuffled] = useState(false);
+
+  const shuffleCards = () => {
+    let newCards = cards;
     const cardPositionArray = [1, 2, 3, 4];
     let newCardPosArray = cardPositionArray;
     for (let i = 0; i < cardPositionArray.length; i++) {
@@ -27,7 +31,7 @@ export default function Dalgona({ startTheGame }) {
         Math.random() * newCardPosArray.length
       );
       const newPos = newCardPosArray[cardPosIndexToRemove];
-      newIcons = newIcons.map((icon, index) => {
+      newCards = newCards.map((icon, index) => {
         if (index === i)
           return {
             ...icon,
@@ -37,12 +41,26 @@ export default function Dalgona({ startTheGame }) {
       });
       newCardPosArray = newCardPosArray.filter((x) => x !== newPos);
     }
-    return newIcons.sort((a, b) => a.position - b.position);
+    setCards(newCards.sort((a, b) => a.position - b.position));
+    setIsCardsShuffled(true);
   };
+
+  useEffect(
+    () => {
+      //Prevent cards shuffling on every render
+      if (cards.every((card) => !card.position)) {
+        shuffleCards();
+      }
+    },
+    // eslint-disable-next-line
+    []
+  );
 
   return (
     <StyledDalgona>
-      <DalgonaCards cards={cards()} cardChosen={startTheGame} />
+      {isCardsShuffled && (
+        <DalgonaCards cards={cards} cardChosen={startTheGame} />
+      )}
     </StyledDalgona>
   );
 }

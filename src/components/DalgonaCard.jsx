@@ -52,7 +52,6 @@ export default function DalgonaCard({
     <StyledDalgonaCard
       chosenCard={isChosenCard}
       showRecto={showRecto}
-      key={card.position}
       onClick={() => onCardClick(card.position)}
     >
       <div className="face recto">

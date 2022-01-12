@@ -48,7 +48,7 @@ export default function DalgonaCards({ cards, cardChosen }) {
     <StyledDalgonaCards>
       {cards.map((card) => (
         <DalgonaCard
-          key={card.position}
+          key={card.name}
           card={card}
           isChosenCard={chosenCardPosition === card.position}
           showRecto={
