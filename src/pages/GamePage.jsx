@@ -27,9 +27,9 @@ const StyledGamePage = styled.div`
 `;
 
 export default function GamePage({ game, stopPlaying }) {
-  const gamesTime = [
-    { name: "green-light-red-light", time: 61 },
-    { name: "dalgona", time: 61 },
+  const gamesData = [
+    { name: "green-light-red-light", time: 61, gotIntro: false },
+    { name: "dalgona", time: 61, gotIntro: true },
   ];
 
   const [isModalOpen, setIsModalOpen] = useState(true);
@@ -49,7 +49,7 @@ export default function GamePage({ game, stopPlaying }) {
   //Close modal, start countdown before the game start
   const onClickStart = () => {
     setIsModalOpen(false);
-    if (game !== "dalgona") {
+    if (!gamesData.find((data) => data.name === game).gotIntro) {
       setShowTimeBeforeStart(true);
       countdownBeforeStart.current = setInterval(
         () => setTimeBeforeStart((v) => v - 1),
@@ -83,7 +83,7 @@ export default function GamePage({ game, stopPlaying }) {
   //Start game
   const startPlay = () => {
     setStartPlaying(true);
-    if (game !== "dalgona") {
+    if (!gamesData.find((data) => data.name === game).gotIntro) {
       setStillPlaying(true);
     }
   };
@@ -151,7 +151,7 @@ export default function GamePage({ game, stopPlaying }) {
       <span className="game-state">
         {startPlaying && stillPlaying && (
           <GameCountdown
-            time={gamesTime.find((x) => x.name === game).time}
+            time={gamesData.find((x) => x.name === game).time}
             timesUp={handleTimesUp}
           />
         )}
