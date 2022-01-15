@@ -2,6 +2,7 @@ import styled from "styled-components";
 import GreenLightRedLightAnimation from "../components/GreenLightRedLightAnimation";
 import GameCard from "../components/GameCard";
 import DalgonaAnimation from "../components/DalgonaAnimation";
+import PropTypes from "prop-types";
 
 const StyledSelectGamesPage = styled.section`
   text-align: center;
@@ -92,3 +93,7 @@ export default function SelectGamesPage({ onSelectGame }) {
     </StyledSelectGamesPage>
   );
 }
+
+SelectGamesPage.propTypes = {
+  onSelectGame: PropTypes.func.isRequired,
+};

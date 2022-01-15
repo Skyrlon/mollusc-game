@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useState } from "react";
+import PropTypes from "prop-types";
 
 export default function GameCard({ game, onSelectGame }) {
   const [showDescription, setShowDescription] = useState(false);
@@ -52,3 +53,8 @@ export default function GameCard({ game, onSelectGame }) {
     </Card>
   );
 }
+
+GameCard.propTypes = {
+  game: PropTypes.object.isRequired,
+  onSelectGame: PropTypes.func.isRequired,
+};

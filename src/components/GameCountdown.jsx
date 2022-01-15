@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import PropTypes from "prop-types";
 
 function convertOneDigitNumberToTwo(number) {
   return parseInt(number) < 10 ? `0${number}` : number;
@@ -34,3 +35,8 @@ export default function GameCountdown({ time, timesUp }) {
     </span>
   );
 }
+
+GameCountdown.propTypes = {
+  time: PropTypes.number.isRequired,
+  timesUp: PropTypes.func.isRequired,
+};

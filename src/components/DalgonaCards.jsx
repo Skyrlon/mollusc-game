@@ -1,6 +1,7 @@
 import DalgonaCard from "./DalgonaCard";
 import styled from "styled-components";
 import { useState } from "react";
+import PropTypes from "prop-types";
 
 const StyledDalgonaCards = styled.div`
   width: 100%;
@@ -60,3 +61,7 @@ export default function DalgonaCards({ cards, cardChosen }) {
     </StyledDalgonaCards>
   );
 }
+
+DalgonaCards.propTypes = {
+  cardClickedPosition: PropTypes.number,
+};

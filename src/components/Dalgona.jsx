@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 import { ReactComponent as CircleIcon } from "../assets/circle.svg";
 import { ReactComponent as StarIcon } from "../assets/star.svg";
@@ -64,3 +65,7 @@ export default function Dalgona({ startTheGame }) {
     </StyledDalgona>
   );
 }
+
+Dalgona.propTypes = {
+  startTheGame: PropTypes.func.isRequired,
+};

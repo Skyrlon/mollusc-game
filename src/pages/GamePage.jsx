@@ -5,6 +5,7 @@ import GameCountdown from "../components/GameCountdown";
 import { Button, Modal, Typography, ButtonGroup } from "@mui/material";
 import { Box } from "@mui/system";
 import Dalgona from "../components/Dalgona";
+import PropTypes from "prop-types";
 
 const StyledGamePage = styled.div`
   width: 100vw;
@@ -170,3 +171,8 @@ export default function GamePage({ game, stopPlaying }) {
     </StyledGamePage>
   );
 }
+
+GamePage.propTypes = {
+  game: PropTypes.string.isRequired,
+  stopPlaying: PropTypes.func.isRequired,
+};

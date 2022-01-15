@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import PropTypes from "prop-types";
 
 const StyledDalgonaCard = styled.div`
   position: relative;
@@ -61,3 +62,10 @@ export default function DalgonaCard({
     </StyledDalgonaCard>
   );
 }
+
+DalgonaCard.propTypes = {
+  card: PropTypes.object.isRequired,
+  showRecto: PropTypes.bool.isRequired,
+  onCardClick: PropTypes.func.isRequired,
+  isChosenCard: PropTypes.bool.isRequired,
+};

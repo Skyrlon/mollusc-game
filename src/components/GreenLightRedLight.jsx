@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { Button } from "@mui/material";
+import PropTypes from "prop-types";
 
 const StyledGreenLightRedLight = styled.div`
   width: 100%;
@@ -144,3 +145,9 @@ export default function GreenLightRedLight({ gameOver, startPlay, stillPlay }) {
     </StyledGreenLightRedLight>
   );
 }
+
+GreenLightRedLight.propTypes = {
+  gameOver: PropTypes.func.isRequired,
+  startPlay: PropTypes.bool.isRequired,
+  stillPlay: PropTypes.bool.isRequired,
+};
