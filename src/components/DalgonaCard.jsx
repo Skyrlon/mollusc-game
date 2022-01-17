@@ -1,14 +1,60 @@
-import styled from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import PropTypes from "prop-types";
 
+const flip = keyframes`
+  from {
+  transform: rotateY(180deg) translateY(-50%);
+}
+  to {
+  transform: rotateY(0deg) translateY(-50%);
+}`;
+
+const goOutside = keyframes`
+  from {
+    transform: translateY(-50%);
+} 
+  to {
+    top:110%;
+    transform: translateY(0%);
+}`;
+
+const zoomInAndCenter = keyframes`
+  from {
+    transform: translateY(-50%);
+  }
+  to {
+    left:50%;
+    
+    transform: translateY(-50%) translateX(-50%) scale(1.3);
+  }
+`;
+
 const StyledDalgonaCard = styled.div`
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: ${(props) => props.position * 20 + (props.position + 1) * 5}%;
   width: 15%;
-  height: 30rem;
+  height: 40rem;
   transform-style: preserve-3d;
   perspective: 1000px;
-  transform: rotateY(${(props) => (props.showRecto ? 0 : 180)}deg);
-  transition: 1s;
+  transform: rotateY(180deg) translateY(-50%);
+  animation: ${(props) =>
+      props.showRecto &&
+      css`
+        ${flip} ${props.animationsTimes.cardFlipDuration}ms forwards
+      `},
+    ${(props) =>
+      props.chosenCard
+        ? css`
+            ${zoomInAndCenter} ${props.animationsTimes
+              .cardChosenZoomInCenterDuration}ms ${props.animationsTimes
+              .cardChosenZoomInCenterDelay}ms linear forwards
+          `
+        : css`
+            ${goOutside} ${props.animationsTimes
+              .cardsNotChosenLeaveDuration}ms ${props.animationsTimes
+              .cardsNotChosenLeaveDelay}ms linear forwards
+          `};
 
   & .face {
     position: absolute;
@@ -19,6 +65,7 @@ const StyledDalgonaCard = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
 
     &.recto {
       background: white;
@@ -37,9 +84,7 @@ const StyledDalgonaCard = styled.div`
   }
 
   & .icon {
-    & svg {
-      transform: scale(0.8);
-    }
+    width: 80%;
   }
 `;
 
@@ -48,11 +93,14 @@ export default function DalgonaCard({
   showRecto,
   onCardClick,
   isChosenCard,
+  animationsTimes,
 }) {
   return (
     <StyledDalgonaCard
       chosenCard={isChosenCard}
       showRecto={showRecto}
+      position={card.position}
+      animationsTimes={animationsTimes}
       onClick={() => onCardClick(card.position)}
     >
       <div className="face recto">
@@ -68,4 +116,5 @@ DalgonaCard.propTypes = {
   showRecto: PropTypes.bool.isRequired,
   onCardClick: PropTypes.func.isRequired,
   isChosenCard: PropTypes.bool.isRequired,
+  animationsTimes: PropTypes.object.isRequired,
 };

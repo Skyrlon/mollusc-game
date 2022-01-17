@@ -25,7 +25,7 @@ export default function Dalgona({ startTheGame }) {
 
   const shuffleCards = () => {
     let newCards = cards;
-    const cardPositionArray = [1, 2, 3, 4];
+    const cardPositionArray = [0, 1, 2, 3];
     let newCardPosArray = cardPositionArray;
     for (let i = 0; i < cardPositionArray.length; i++) {
       const cardPosIndexToRemove = Math.floor(
