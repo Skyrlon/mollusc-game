@@ -1,6 +1,17 @@
 import styled, { keyframes, css } from "styled-components";
 import PropTypes from "prop-types";
 
+const showCards = keyframes`
+  from {
+    top:110%;
+    transform: rotateY(180deg) translateY(0%);
+  }
+  to {
+    top: 50%;
+    transform: rotateY(180deg) translateY(-50%);
+  }
+`;
+
 const flip = keyframes`
   from {
   transform: rotateY(180deg) translateY(-50%);
@@ -9,8 +20,9 @@ const flip = keyframes`
   transform: rotateY(0deg) translateY(-50%);
 }`;
 
-const goOutside = keyframes`
+const hideCards = keyframes`
   from {
+    top: 50%;
     transform: translateY(-50%);
 } 
   to {
@@ -39,22 +51,31 @@ const StyledDalgonaCard = styled.div`
   perspective: 1000px;
   transform: rotateY(180deg) translateY(-50%);
   animation: ${(props) =>
+      css`
+        ${showCards} ${props.animationsTimes
+          .cardsNotChosenLeaveDuration}ms forwards
+      `}${(props) => props.showRecto && ","}${(props) =>
       props.showRecto &&
       css`
         ${flip} ${props.animationsTimes.cardFlipDuration}ms forwards
-      `},
-    ${(props) =>
-      props.chosenCard
-        ? css`
-            ${zoomInAndCenter} ${props.animationsTimes
-              .cardChosenZoomInCenterDuration}ms ${props.animationsTimes
-              .cardChosenZoomInCenterDelay}ms linear forwards
-          `
-        : css`
-            ${goOutside} ${props.animationsTimes
-              .cardsNotChosenLeaveDuration}ms ${props.animationsTimes
-              .cardsNotChosenLeaveDelay}ms linear forwards
-          `};
+      `}${(props) =>
+      ((props.showRecto && props.chosenCard) ||
+        (props.showRecto && !props.chosenCard)) &&
+      ","} ${(props) =>
+      (props.showRecto &&
+        props.chosenCard &&
+        css`
+          ${zoomInAndCenter} ${props.animationsTimes
+            .cardChosenZoomInCenterDuration}ms ${props.animationsTimes
+            .cardChosenZoomInCenterDelay}ms linear forwards
+        `) ||
+      (props.showRecto &&
+        !props.chosenCard &&
+        css`
+          ${hideCards} ${props.animationsTimes
+            .cardsNotChosenLeaveDuration}ms ${props.animationsTimes
+            .cardsNotChosenLeaveDelay}ms linear forwards
+        `)};
 
   & .face {
     position: absolute;
