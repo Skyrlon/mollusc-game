@@ -1,20 +1,35 @@
+import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+import { ReactComponent as CircleIcon } from "../assets/circle.svg";
+import { ReactComponent as StarIcon } from "../assets/star.svg";
+import { ReactComponent as TriangleIcon } from "../assets/triangle.svg";
+import { ReactComponent as UmbrellaIcon } from "../assets/umbrella.svg";
 
 const StyledDalgonaAnimation = styled.div`
-  .circle {
-    transform-origin: center;
-    transform: rotate(-90deg);
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%;
+
+  svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
   }
 
-  .circle-front {
-    stroke-dasharray: 251.362548828125;
-    stroke-dashoffset: 251.362548828125;
-    animation: draw-circle 5s linear infinite;
+  & :nth-child(2) {
+    & > * {
+      stroke: red;
+      stroke-dasharray: ${(props) => props.shapeLength};
+      stroke-dashoffset: ${(props) => props.shapeLength};
+      animation: draw-circle 5s linear infinite;
+    }
   }
 
   @keyframes draw-circle {
     0% {
-      stroke-dashoffset: 251.362548828125;
+      stroke-dashoffset: ${(props) => props.shapeLength};
     }
     50% {
       stroke-dashoffset: 0;
@@ -26,26 +41,41 @@ const StyledDalgonaAnimation = styled.div`
 `;
 
 export default function DalgonaAnimation() {
+  const svgIcons = [
+    <CircleIcon />,
+    <StarIcon />,
+    <TriangleIcon />,
+    <UmbrellaIcon />,
+  ];
+
+  const [iconToShow, setIconToShow] = useState(null);
+
+  const [shapeLength, setShapeLength] = useState(null);
+
+  const containerRef = useRef(null);
+
+  const chooseRandomIcon = () => {
+    const randomIndex = Math.floor(Math.random() * svgIcons.length);
+    setIconToShow(svgIcons.find((icon, index) => index === randomIndex));
+  };
+
+  useEffect(
+    () => {
+      if (!iconToShow) {
+        chooseRandomIcon();
+      } else {
+        setShapeLength(
+          containerRef.current.children[0].children[0].getTotalLength()
+        );
+      }
+    }, // eslint-disable-next-line
+    [iconToShow]
+  );
+
   return (
-    <StyledDalgonaAnimation>
-      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <circle
-          className="circle"
-          cx="50"
-          cy="50"
-          r="30"
-          stroke="black"
-          fill="transparent"
-        />
-        <circle
-          className="circle circle-front"
-          cx="50"
-          cy="50"
-          r="30"
-          stroke="red"
-          fill="transparent"
-        />
-      </svg>
+    <StyledDalgonaAnimation ref={containerRef} shapeLength={shapeLength}>
+      {iconToShow}
+      {iconToShow}
     </StyledDalgonaAnimation>
   );
 }

@@ -28,7 +28,10 @@ export default function GameCard({ game, onSelectGame }) {
       onClick={() => onCardClick(game.nameEvent)}
     >
       <CardMedia
-        sx={{ paddingTop: "1rem", paddingBottom: "1rem" }}
+        sx={{
+          position: "relative",
+          width: "100%",
+        }}
         component="div"
       >
         {game.animation}
