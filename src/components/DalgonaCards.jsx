@@ -84,27 +84,29 @@ export default function DalgonaCards({ cardChosen }) {
 
   const handleCardClick = (cardClickedPosition) => {
     //Shows the card's recto clicked on
-    setShowCardsRecto(
-      showCardsRecto.map((x) => {
-        if (x.position === cardClickedPosition)
-          return { ...x, showRecto: true };
-        else return x;
-      })
-    );
-    //Then shows the others cards' recto after delay
-    setTimeout(() => {
+    if (!chosenCardPosition) {
       setShowCardsRecto(
         showCardsRecto.map((x) => {
-          return { ...x, showRecto: true };
+          if (x.position === cardClickedPosition)
+            return { ...x, showRecto: true };
+          else return x;
         })
       );
       setChosenCardPosition(cardClickedPosition);
-    }, animationsTimes.allCardsFlipDelay);
-    //Trigger beginning of the game
-    setTimeout(() => {
-      cardChosen();
-      setShowNotChosenCards(false);
-    }, animationsTimes.endOfAllAnimations);
+      //Then shows the others cards' recto after delay
+      setTimeout(() => {
+        setShowCardsRecto(
+          showCardsRecto.map((x) => {
+            return { ...x, showRecto: true };
+          })
+        );
+      }, animationsTimes.allCardsFlipDelay);
+      //Trigger beginning of the game
+      setTimeout(() => {
+        cardChosen();
+        setShowNotChosenCards(false);
+      }, animationsTimes.endOfAllAnimations);
+    }
   };
 
   useEffect(
