@@ -1,7 +1,9 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 import styled from "styled-components";
 
 import DalgonaCards from "./DalgonaCards";
+import DalgonaShape from "./DalgonaShape";
 
 const StyledDalgona = styled.div`
   width: 100%;
@@ -9,9 +11,17 @@ const StyledDalgona = styled.div`
 `;
 
 export default function Dalgona({ startTheGame }) {
+  const [shapeChosen, setShapeChosen] = useState(null);
+
+  const handleCardChosen = (cardName) => {
+    setShapeChosen(cardName);
+    startTheGame();
+  };
+
   return (
     <StyledDalgona>
-      <DalgonaCards cardChosen={startTheGame} />
+      {!shapeChosen && <DalgonaCards cardChosen={handleCardChosen} />}
+      {shapeChosen && <DalgonaShape shape={shapeChosen} />}
     </StyledDalgona>
   );
 }

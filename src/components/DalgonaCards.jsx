@@ -82,7 +82,7 @@ export default function DalgonaCards({ cardChosen }) {
     );
   };
 
-  const handleCardClick = (cardClickedPosition) => {
+  const handleCardClick = (cardClickedPosition, cardName) => {
     //Shows the card's recto clicked on
     if (!chosenCardPosition) {
       setShowCardsRecto(
@@ -103,7 +103,7 @@ export default function DalgonaCards({ cardChosen }) {
       }, animationsTimes.allCardsFlipDelay);
       //Trigger beginning of the game
       setTimeout(() => {
-        cardChosen();
+        cardChosen(cardName);
         setShowNotChosenCards(false);
       }, animationsTimes.endOfAllAnimations);
     }

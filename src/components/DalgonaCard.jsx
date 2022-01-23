@@ -36,7 +36,6 @@ const zoomInAndCenter = keyframes`
   }
   to {
     left:50%;
-    
     transform: translateY(-50%) translateX(-50%) scale(1.3);
   }
 `;
@@ -122,7 +121,7 @@ export default function DalgonaCard({
       showRecto={showRecto}
       position={card.position}
       animationsTimes={animationsTimes}
-      onClick={() => onCardClick(card.position)}
+      onClick={() => onCardClick(card.position, card.name)}
     >
       <div className="face recto">
         <div className="icon">{card.component}</div>
