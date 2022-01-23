@@ -28,8 +28,6 @@ export default function DalgonaCards({ cardChosen }) {
 
   const [showCardsRecto, setShowCardsRecto] = useState(null);
 
-  const [showNotChosenCards, setShowNotChosenCards] = useState(true);
-
   const animationsTimes = {
     cardFlipDuration: 750,
     get allCardsFlipDelay() {
@@ -41,7 +39,7 @@ export default function DalgonaCards({ cardChosen }) {
     cardsNotChosenLeaveDuration: 500,
     get cardChosenZoomInCenterDelay() {
       return (
-        this.cardsNotChosenLeaveDelay + this.cardsNotChosenLeaveDuration + 250
+        this.cardsNotChosenLeaveDelay + this.cardsNotChosenLeaveDuration + 750
       );
     },
     cardChosenZoomInCenterDuration: 500,
@@ -101,11 +99,11 @@ export default function DalgonaCards({ cardChosen }) {
           })
         );
       }, animationsTimes.allCardsFlipDelay);
-      //Trigger beginning of the game
-      setTimeout(() => {
-        cardChosen(cardName);
-        setShowNotChosenCards(false);
-      }, animationsTimes.endOfAllAnimations);
+      //Trigger the start of the game when all animations are over
+      setTimeout(
+        () => cardChosen(cardName),
+        animationsTimes.endOfAllAnimations
+      );
     }
   };
 
@@ -123,23 +121,18 @@ export default function DalgonaCards({ cardChosen }) {
   return (
     <StyledDalgonaCards>
       {isCardsShuffled &&
-        cards.map(
-          (card) =>
-            (chosenCardPosition === card.position ||
-              (chosenCardPosition !== card.position && showNotChosenCards)) && (
-              <DalgonaCard
-                key={card.position}
-                card={card}
-                isChosenCard={chosenCardPosition === card.position}
-                showRecto={
-                  showCardsRecto.find((x) => x.position === card.position)
-                    .showRecto
-                }
-                animationsTimes={animationsTimes}
-                onCardClick={handleCardClick}
-              />
-            )
-        )}
+        cards.map((card) => (
+          <DalgonaCard
+            key={card.position}
+            card={card}
+            isChosenCard={chosenCardPosition === card.position}
+            showRecto={
+              showCardsRecto.find((x) => x.position === card.position).showRecto
+            }
+            animationsTimes={animationsTimes}
+            onCardClick={handleCardClick}
+          />
+        ))}
     </StyledDalgonaCards>
   );
 }
