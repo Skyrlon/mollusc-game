@@ -30,7 +30,7 @@ function multiplicateNumberInString(string, factor) {
   return newPath.join(" ");
 }
 
-export default function DalgonaShape({ shape }) {
+export default function DalgonaShape({ shape, onInteriorShapeClick }) {
   const [width, setWidth] = useState(null);
   const [height, setHeight] = useState(null);
 
@@ -125,6 +125,11 @@ export default function DalgonaShape({ shape }) {
         1 * canvasResolutionRatio.current,
         1 * canvasResolutionRatio.current
       );
+    } else if (
+      `rgba(${imageData[0]}, ${imageData[1]}, ${imageData[2]}, ${imageData[3]})` ===
+      canvasFillColor.current
+    ) {
+      onInteriorShapeClick();
     }
   };
 

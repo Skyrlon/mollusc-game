@@ -166,7 +166,10 @@ export default function GamePage({ game, stopPlaying }) {
         />
       )}
       {game === "dalgona" && startPlaying && (
-        <Dalgona startTheGame={() => setStillPlaying(true)} />
+        <Dalgona
+          startTheGame={() => setStillPlaying(true)}
+          gameOver={handleGameOver}
+        />
       )}
     </StyledGamePage>
   );
