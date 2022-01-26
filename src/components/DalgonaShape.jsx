@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import Canvas from "./Canvas";
@@ -41,26 +41,33 @@ export default function DalgonaShape({ shape }) {
     { name: "umbrella", width: 570, height: 530 },
   ];
 
+  const canvasStrokeColor = useRef(null);
+  const canvasFillColor = useRef(null);
+  const canvasResolutionRatio = useRef(null);
+
   const draw = (ctx) => {
     const resolutionRatio = window.innerWidth / 100;
-
     setWidth(canvasSizes.find((x) => x.name === shape).width * resolutionRatio);
     setHeight(
       canvasSizes.find((x) => x.name === shape).height * resolutionRatio
     );
     let path = null;
+    const strokeColor = "rgba(0, 0, 0, 255)";
+    const fillColor = "rgba(255, 255, 254, 255)";
     if (shape === "circle") {
-      ctx.beginPath();
-      ctx.arc(
+      path = new Path2D();
+      path.arc(
         75 * resolutionRatio,
         75 * resolutionRatio,
         50 * resolutionRatio,
         0,
-        Math.PI * 2,
-        true
+        Math.PI * 2
       );
-      ctx.lineWidth = 3 * resolutionRatio;
-      ctx.stroke();
+      ctx.lineWidth = 5 * resolutionRatio;
+      ctx.fillStyle = fillColor;
+      ctx.fill(path);
+      ctx.strokeStyle = strokeColor;
+      ctx.stroke(path);
     }
     if (shape === "star") {
       path = new Path2D(
@@ -71,6 +78,9 @@ export default function DalgonaShape({ shape }) {
       );
       ctx.translate(1 * resolutionRatio, 0);
       ctx.lineWidth = 1 * resolutionRatio;
+      ctx.fillStyle = fillColor;
+      ctx.fill(path);
+      ctx.strokeStyle = strokeColor;
       ctx.stroke(path);
     }
     if (shape === "triangle") {
@@ -78,6 +88,9 @@ export default function DalgonaShape({ shape }) {
         multiplicateNumberInString("M50 1l49 98H1z", resolutionRatio)
       );
       ctx.lineWidth = 1 * resolutionRatio;
+      ctx.fillStyle = fillColor;
+      ctx.fill(path);
+      ctx.strokeStyle = strokeColor;
       ctx.stroke(path);
     }
     if (shape === "umbrella") {
@@ -89,13 +102,35 @@ export default function DalgonaShape({ shape }) {
       );
       ctx.translate(10 * resolutionRatio, 0);
       ctx.lineWidth = 10 * resolutionRatio;
+      ctx.fillStyle = fillColor;
+      ctx.fill(path);
+      ctx.strokeStyle = strokeColor;
       ctx.stroke(path);
+    }
+    canvasStrokeColor.current = strokeColor;
+    canvasFillColor.current = fillColor;
+    canvasResolutionRatio.current = resolutionRatio;
+  };
+
+  const handleClick = ({ ctx, x, y }) => {
+    const imageData = ctx.getImageData(x, y, 1, 1).data;
+    if (
+      `rgba(${imageData[0]}, ${imageData[1]}, ${imageData[2]}, ${imageData[3]})` ===
+      canvasStrokeColor.current
+    ) {
+      ctx.fillStyle = "red";
+      ctx.fillRect(
+        x,
+        y,
+        1 * canvasResolutionRatio.current,
+        1 * canvasResolutionRatio.current
+      );
     }
   };
 
   return (
     <StyledDalgonaShape>
-      <Canvas draw={draw} width={width} height={height} />
+      <Canvas draw={draw} width={width} height={height} onClick={handleClick} />
     </StyledDalgonaShape>
   );
 }

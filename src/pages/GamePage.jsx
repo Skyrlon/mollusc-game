@@ -30,7 +30,7 @@ const StyledGamePage = styled.div`
 export default function GamePage({ game, stopPlaying }) {
   const gamesData = [
     { name: "green-light-red-light", time: 61, gotIntro: false },
-    { name: "dalgona", time: 61, gotIntro: true },
+    { name: "dalgona", time: 610, gotIntro: true },
   ];
 
   const [isModalOpen, setIsModalOpen] = useState(true);
