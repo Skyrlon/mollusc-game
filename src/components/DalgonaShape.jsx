@@ -30,7 +30,7 @@ function multiplicateNumberInString(string, factor) {
   return newPath.join(" ");
 }
 
-export default function DalgonaShape({ shape, onInteriorShapeClick }) {
+export default function DalgonaShape({ shape, onInteriorShapeDraw }) {
   const [width, setWidth] = useState(null);
   const [height, setHeight] = useState(null);
 
@@ -45,7 +45,7 @@ export default function DalgonaShape({ shape, onInteriorShapeClick }) {
   const canvasFillColor = useRef(null);
   const canvasResolutionRatio = useRef(null);
 
-  const draw = (ctx) => {
+  const drawShape = (ctx) => {
     const resolutionRatio = window.innerWidth / 100;
     setWidth(canvasSizes.find((x) => x.name === shape).width * resolutionRatio);
     setHeight(
@@ -112,7 +112,7 @@ export default function DalgonaShape({ shape, onInteriorShapeClick }) {
     canvasResolutionRatio.current = resolutionRatio;
   };
 
-  const handleClick = ({ ctx, x, y }) => {
+  const handleDrawing = ({ ctx, x, y }) => {
     const imageData = ctx.getImageData(x, y, 1, 1).data;
     if (
       `rgba(${imageData[0]}, ${imageData[1]}, ${imageData[2]}, ${imageData[3]})` ===
@@ -129,17 +129,23 @@ export default function DalgonaShape({ shape, onInteriorShapeClick }) {
       `rgba(${imageData[0]}, ${imageData[1]}, ${imageData[2]}, ${imageData[3]})` ===
       canvasFillColor.current
     ) {
-      onInteriorShapeClick();
+      onInteriorShapeDraw();
     }
   };
 
   return (
     <StyledDalgonaShape>
-      <Canvas draw={draw} width={width} height={height} onClick={handleClick} />
+      <Canvas
+        drawShape={drawShape}
+        width={width}
+        height={height}
+        onDrawing={handleDrawing}
+      />
     </StyledDalgonaShape>
   );
 }
 
 DalgonaShape.propTypes = {
   shape: PropTypes.string.isRequired,
+  onInteriorShapeDraw: PropTypes.func.isRequired,
 };

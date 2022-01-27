@@ -24,7 +24,7 @@ export default function Dalgona({ startTheGame, gameOver }) {
       {shapeChosen && (
         <DalgonaShape
           shape={shapeChosen}
-          onInteriorShapeClick={() => gameOver({ win: false })}
+          onInteriorShapeDraw={() => gameOver({ win: false })}
         />
       )}
     </StyledDalgona>
