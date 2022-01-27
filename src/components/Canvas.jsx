@@ -6,18 +6,20 @@ export default function Canvas({ width, height, drawShape, onDrawing }) {
   const isDrawing = useRef(null);
 
   const handleDraw = (e) => {
-    if (isDrawing.current) {
-      const rect = canvasRef.current.getBoundingClientRect();
-      onDrawing({
-        ctx: canvasRef.current.getContext("2d"),
-        x:
-          ((e.clientX - rect.left) / (rect.right - rect.left)) *
-          canvasRef.current.width,
-        y:
-          ((e.clientY - rect.top) / (rect.bottom - rect.top)) *
-          canvasRef.current.height,
-      });
-    }
+    const rect = canvasRef.current.getBoundingClientRect();
+    onDrawing({
+      ctx: canvasRef.current.getContext("2d"),
+      x:
+        ((e.clientX - rect.left) / (rect.right - rect.left)) *
+        canvasRef.current.width,
+      y:
+        ((e.clientY - rect.top) / (rect.bottom - rect.top)) *
+        canvasRef.current.height,
+    });
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDrawing.current) handleDraw(e);
   };
 
   useEffect(() => {
@@ -30,9 +32,10 @@ export default function Canvas({ width, height, drawShape, onDrawing }) {
       ref={canvasRef}
       width={width}
       height={height}
+      onClick={handleDraw}
       onMouseDown={() => (isDrawing.current = true)}
       onMouseUp={() => (isDrawing.current = false)}
-      onMouseMove={handleDraw}
+      onMouseMove={handleMouseMove}
     ></canvas>
   );
 }
