@@ -44,6 +44,7 @@ export default function DalgonaShape({ shape, onInteriorShapeDraw }) {
   const canvasStrokeColor = useRef(null);
   const canvasFillColor = useRef(null);
   const canvasResolutionRatio = useRef(null);
+  const canvasLineWidth = useRef(null);
 
   const drawShape = (ctx) => {
     const resolutionRatio = window.innerWidth / 100;
@@ -54,6 +55,7 @@ export default function DalgonaShape({ shape, onInteriorShapeDraw }) {
     let path = null;
     const strokeColor = "rgba(0, 0, 0, 255)";
     const fillColor = "rgba(255, 255, 254, 255)";
+    let lineWidth = null;
     if (shape === "circle") {
       path = new Path2D();
       path.arc(
@@ -63,7 +65,8 @@ export default function DalgonaShape({ shape, onInteriorShapeDraw }) {
         0,
         Math.PI * 2
       );
-      ctx.lineWidth = 5 * resolutionRatio;
+      lineWidth = 5 * resolutionRatio;
+      ctx.lineWidth = lineWidth;
       ctx.fillStyle = fillColor;
       ctx.fill(path);
       ctx.strokeStyle = strokeColor;
@@ -76,8 +79,9 @@ export default function DalgonaShape({ shape, onInteriorShapeDraw }) {
           resolutionRatio
         )
       );
-      ctx.translate(1 * resolutionRatio, 0);
-      ctx.lineWidth = 1 * resolutionRatio;
+      lineWidth = 1 * resolutionRatio;
+      ctx.translate(lineWidth, 0);
+      ctx.lineWidth = lineWidth;
       ctx.fillStyle = fillColor;
       ctx.fill(path);
       ctx.strokeStyle = strokeColor;
@@ -87,7 +91,8 @@ export default function DalgonaShape({ shape, onInteriorShapeDraw }) {
       path = new Path2D(
         multiplicateNumberInString("M50 1l49 98H1z", resolutionRatio)
       );
-      ctx.lineWidth = 1 * resolutionRatio;
+      lineWidth = 1 * resolutionRatio;
+      ctx.lineWidth = lineWidth;
       ctx.fillStyle = fillColor;
       ctx.fill(path);
       ctx.strokeStyle = strokeColor;
@@ -100,13 +105,15 @@ export default function DalgonaShape({ shape, onInteriorShapeDraw }) {
           resolutionRatio
         )
       );
-      ctx.translate(10 * resolutionRatio, 0);
-      ctx.lineWidth = 10 * resolutionRatio;
+      lineWidth = 10 * resolutionRatio;
+      ctx.translate(lineWidth, 0);
+      ctx.lineWidth = lineWidth;
       ctx.fillStyle = fillColor;
       ctx.fill(path);
       ctx.strokeStyle = strokeColor;
       ctx.stroke(path);
     }
+    canvasLineWidth.current = lineWidth;
     canvasStrokeColor.current = strokeColor;
     canvasFillColor.current = fillColor;
     canvasResolutionRatio.current = resolutionRatio;
@@ -119,12 +126,7 @@ export default function DalgonaShape({ shape, onInteriorShapeDraw }) {
       canvasStrokeColor.current
     ) {
       ctx.fillStyle = "red";
-      ctx.fillRect(
-        x,
-        y,
-        1 * canvasResolutionRatio.current,
-        1 * canvasResolutionRatio.current
-      );
+      ctx.fillRect(x, y, canvasLineWidth.current, canvasLineWidth.current);
     } else if (
       `rgba(${imageData[0]}, ${imageData[1]}, ${imageData[2]}, ${imageData[3]})` ===
       canvasFillColor.current
