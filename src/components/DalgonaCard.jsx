@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import styled, { keyframes, css } from "styled-components";
 import PropTypes from "prop-types";
 
@@ -115,16 +116,26 @@ export default function DalgonaCard({
   isChosenCard,
   animationsTimes,
 }) {
+  const iconRef = useRef(null);
+
   return (
     <StyledDalgonaCard
       chosenCard={isChosenCard}
       showRecto={showRecto}
       position={card.position}
       animationsTimes={animationsTimes}
-      onClick={() => onCardClick(card.position, card.name)}
+      onClick={() =>
+        onCardClick(
+          card.position,
+          card.name,
+          iconRef.current.children[0].viewBox.baseVal
+        )
+      }
     >
       <div className="face recto">
-        <div className="icon">{card.component}</div>
+        <div className="icon" ref={iconRef}>
+          {card.component}
+        </div>
       </div>
       <div className="face verso"></div>
     </StyledDalgonaCard>

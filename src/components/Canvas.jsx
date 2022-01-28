@@ -43,6 +43,6 @@ export default function Canvas({ width, height, drawShape, onDrawing }) {
 Canvas.propTypes = {
   width: PropTypes.number,
   height: PropTypes.number,
-  draw: PropTypes.func.isRequired,
+  drawShape: PropTypes.func.isRequired,
   onDrawing: PropTypes.func.isRequired,
 };

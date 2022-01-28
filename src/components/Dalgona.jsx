@@ -13,8 +13,8 @@ const StyledDalgona = styled.div`
 export default function Dalgona({ startTheGame, gameOver }) {
   const [shapeChosen, setShapeChosen] = useState(null);
 
-  const handleCardChosen = (cardName) => {
-    setShapeChosen(cardName);
+  const handleCardChosen = (cardName, svgDimensions) => {
+    setShapeChosen({ name: cardName, dimensions: svgDimensions });
     startTheGame();
   };
 
