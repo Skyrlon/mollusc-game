@@ -118,19 +118,29 @@ export default function DalgonaCard({
 }) {
   const iconRef = useRef(null);
 
+  const findAttribute = (element, attribute) => {
+    if (element.hasAttribute(attribute)) {
+      return element.getAttribute(attribute);
+    } else {
+      return findAttribute(element.children[0], attribute);
+    }
+  };
+
+  const handleOnClick = () => {
+    const svgViewbox = {
+      width: Number(findAttribute(iconRef.current, "viewBox").split(" ")[2]),
+      height: Number(findAttribute(iconRef.current, "viewBox").split(" ")[3]),
+    };
+    onCardClick(card.position, card.name, svgViewbox);
+  };
+
   return (
     <StyledDalgonaCard
       chosenCard={isChosenCard}
       showRecto={showRecto}
       position={card.position}
       animationsTimes={animationsTimes}
-      onClick={() =>
-        onCardClick(
-          card.position,
-          card.name,
-          iconRef.current.children[0].viewBox.baseVal
-        )
-      }
+      onClick={handleOnClick}
     >
       <div className="face recto">
         <div className="icon" ref={iconRef}>
