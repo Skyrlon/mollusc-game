@@ -131,7 +131,17 @@ export default function DalgonaCard({
       width: Number(findAttribute(iconRef.current, "viewBox").split(" ")[2]),
       height: Number(findAttribute(iconRef.current, "viewBox").split(" ")[3]),
     };
-    onCardClick(card.position, card.name, svgViewbox);
+    let shape;
+    if (card.name === "circle") {
+      shape = {
+        cx: Number(findAttribute(iconRef.current, "cx")),
+        cy: Number(findAttribute(iconRef.current, "cy")),
+        r: Number(findAttribute(iconRef.current, "r")),
+      };
+    } else {
+      shape = findAttribute(iconRef.current, "d");
+    }
+    onCardClick(card.position, card.name, svgViewbox, shape);
   };
 
   return (

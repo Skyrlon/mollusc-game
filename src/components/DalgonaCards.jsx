@@ -80,7 +80,12 @@ export default function DalgonaCards({ cardChosen }) {
     );
   };
 
-  const handleCardClick = (cardClickedPosition, cardName, svgDimensions) => {
+  const handleCardClick = (
+    cardClickedPosition,
+    cardName,
+    svgDimensions,
+    shape
+  ) => {
     //Shows the card's recto clicked on
     if (!chosenCardPosition) {
       setShowCardsRecto(
@@ -101,7 +106,7 @@ export default function DalgonaCards({ cardChosen }) {
       }, animationsTimes.allCardsFlipDelay);
       //Trigger the start of the game when all animations are over
       setTimeout(
-        () => cardChosen(cardName, svgDimensions),
+        () => cardChosen(cardName, svgDimensions, shape),
         animationsTimes.endOfAllAnimations
       );
     }
