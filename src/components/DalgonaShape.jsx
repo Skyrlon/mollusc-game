@@ -30,7 +30,7 @@ function multiplicateNumberInString(string, factor) {
   return newPath.join(" ");
 }
 
-export default function DalgonasvgData({ svgData, onInteriorsvgDataDraw }) {
+export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
   const [width, setWidth] = useState(null);
   const [height, setHeight] = useState(null);
 
@@ -41,19 +41,22 @@ export default function DalgonasvgData({ svgData, onInteriorsvgDataDraw }) {
 
   const drawShape = (ctx) => {
     const resolutionRatio = window.innerWidth / 100;
-    setWidth(svgData.dimensions.width * resolutionRatio);
-    setHeight(svgData.dimensions.height * resolutionRatio);
+    const compressionRatio = parseInt(
+      svgData.dimensions.width.toString().length
+    );
+    setWidth((svgData.dimensions.width * resolutionRatio) / compressionRatio);
+    setHeight((svgData.dimensions.height * resolutionRatio) / compressionRatio);
     let path = null;
     const strokeColor = "rgba(0, 0, 0, 255)";
     const fillColor = "rgba(255, 255, 254, 255)";
     let lineWidth = null;
     if (svgData.name === "circle") {
-      lineWidth = 5 * resolutionRatio;
+      lineWidth = (5 * resolutionRatio) / compressionRatio;
       path = new Path2D();
       path.arc(
-        svgData.shape.cx * resolutionRatio,
-        svgData.shape.cy * resolutionRatio,
-        svgData.shape.r * resolutionRatio - lineWidth * 2,
+        (svgData.shape.cx * resolutionRatio) / compressionRatio,
+        (svgData.shape.cy * resolutionRatio) / compressionRatio,
+        (svgData.shape.r * resolutionRatio) / compressionRatio - lineWidth * 2,
         0,
         Math.PI * 2
       );
@@ -66,9 +69,12 @@ export default function DalgonasvgData({ svgData, onInteriorsvgDataDraw }) {
     }
     if (svgData.name === "star") {
       path = new Path2D(
-        multiplicateNumberInString(svgData.shape, resolutionRatio)
+        multiplicateNumberInString(
+          svgData.shape,
+          resolutionRatio / compressionRatio
+        )
       );
-      lineWidth = 1 * resolutionRatio;
+      lineWidth = (1 * resolutionRatio) / compressionRatio;
       ctx.translate(lineWidth, 0);
       ctx.lineWidth = lineWidth;
       ctx.fillStyle = fillColor;
@@ -78,9 +84,12 @@ export default function DalgonasvgData({ svgData, onInteriorsvgDataDraw }) {
     }
     if (svgData.name === "triangle") {
       path = new Path2D(
-        multiplicateNumberInString(svgData.shape, resolutionRatio)
+        multiplicateNumberInString(
+          svgData.shape,
+          resolutionRatio / compressionRatio
+        )
       );
-      lineWidth = 1 * resolutionRatio;
+      lineWidth = (1 * resolutionRatio) / compressionRatio;
       ctx.lineWidth = lineWidth;
       ctx.fillStyle = fillColor;
       ctx.fill(path);
@@ -89,9 +98,12 @@ export default function DalgonasvgData({ svgData, onInteriorsvgDataDraw }) {
     }
     if (svgData.name === "umbrella") {
       path = new Path2D(
-        multiplicateNumberInString(svgData.shape, resolutionRatio)
+        multiplicateNumberInString(
+          svgData.shape,
+          resolutionRatio / compressionRatio
+        )
       );
-      lineWidth = 10 * resolutionRatio;
+      lineWidth = (10 * resolutionRatio) / compressionRatio;
       ctx.translate(lineWidth, 0);
       ctx.lineWidth = lineWidth;
       ctx.fillStyle = fillColor;
@@ -117,7 +129,7 @@ export default function DalgonasvgData({ svgData, onInteriorsvgDataDraw }) {
       `rgba(${imageData[0]}, ${imageData[1]}, ${imageData[2]}, ${imageData[3]})` ===
       canvasFillColor.current
     ) {
-      onInteriorsvgDataDraw();
+      onInteriorShapeDraw();
     }
   };
 
@@ -135,5 +147,5 @@ export default function DalgonasvgData({ svgData, onInteriorsvgDataDraw }) {
 
 DalgonasvgData.propTypes = {
   svgData: PropTypes.object.isRequired,
-  onInteriorsvgDataDraw: PropTypes.func.isRequired,
+  onInteriorShapeDraw: PropTypes.func.isRequired,
 };
