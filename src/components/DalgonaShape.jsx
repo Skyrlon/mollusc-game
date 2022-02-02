@@ -46,12 +46,13 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
     );
     setWidth((svgData.dimensions.width * resolutionRatio) / compressionRatio);
     setHeight((svgData.dimensions.height * resolutionRatio) / compressionRatio);
+
     let path = null;
     const strokeColor = "rgba(0, 0, 0, 255)";
     const fillColor = "rgba(255, 255, 254, 255)";
-    let lineWidth = null;
+    let lineWidth =
+      ((svgData.dimensions.width / 30) * resolutionRatio) / compressionRatio;
     if (svgData.name === "circle") {
-      lineWidth = (5 * resolutionRatio) / compressionRatio;
       path = new Path2D();
       path.arc(
         (svgData.shape.cx * resolutionRatio) / compressionRatio,
@@ -74,7 +75,6 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
           resolutionRatio / compressionRatio
         )
       );
-      lineWidth = (1 * resolutionRatio) / compressionRatio;
       ctx.translate(lineWidth, 0);
       ctx.lineWidth = lineWidth;
       ctx.fillStyle = fillColor;
@@ -89,7 +89,6 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
           resolutionRatio / compressionRatio
         )
       );
-      lineWidth = (1 * resolutionRatio) / compressionRatio;
       ctx.lineWidth = lineWidth;
       ctx.fillStyle = fillColor;
       ctx.fill(path);
@@ -103,7 +102,6 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
           resolutionRatio / compressionRatio
         )
       );
-      lineWidth = (10 * resolutionRatio) / compressionRatio;
       ctx.translate(lineWidth, 0);
       ctx.lineWidth = lineWidth;
       ctx.fillStyle = fillColor;
