@@ -44,14 +44,17 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
     const compressionRatio = parseInt(
       svgData.dimensions.width.toString().length
     );
-    setWidth((svgData.dimensions.width * resolutionRatio) / compressionRatio);
-    setHeight((svgData.dimensions.height * resolutionRatio) / compressionRatio);
-
     let path = null;
     const strokeColor = "rgba(0, 0, 0, 255)";
     const fillColor = "rgba(255, 255, 254, 255)";
     let lineWidth =
       ((svgData.dimensions.width / 30) * resolutionRatio) / compressionRatio;
+    setWidth(
+      (svgData.dimensions.width * resolutionRatio) / compressionRatio +
+        lineWidth * 2
+    );
+    setHeight((svgData.dimensions.height * resolutionRatio) / compressionRatio);
+
     if (svgData.name === "circle") {
       path = new Path2D();
       path.arc(
@@ -61,54 +64,20 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
         0,
         Math.PI * 2
       );
-
-      ctx.lineWidth = lineWidth;
-      ctx.fillStyle = fillColor;
-      ctx.fill(path);
-      ctx.strokeStyle = strokeColor;
-      ctx.stroke(path);
-    }
-    if (svgData.name === "star") {
+    } else {
       path = new Path2D(
         multiplicateNumberInString(
           svgData.shape,
           resolutionRatio / compressionRatio
         )
       );
-      ctx.translate(lineWidth, 0);
-      ctx.lineWidth = lineWidth;
-      ctx.fillStyle = fillColor;
-      ctx.fill(path);
-      ctx.strokeStyle = strokeColor;
-      ctx.stroke(path);
     }
-    if (svgData.name === "triangle") {
-      path = new Path2D(
-        multiplicateNumberInString(
-          svgData.shape,
-          resolutionRatio / compressionRatio
-        )
-      );
-      ctx.lineWidth = lineWidth;
-      ctx.fillStyle = fillColor;
-      ctx.fill(path);
-      ctx.strokeStyle = strokeColor;
-      ctx.stroke(path);
-    }
-    if (svgData.name === "umbrella") {
-      path = new Path2D(
-        multiplicateNumberInString(
-          svgData.shape,
-          resolutionRatio / compressionRatio
-        )
-      );
-      ctx.translate(lineWidth, 0);
-      ctx.lineWidth = lineWidth;
-      ctx.fillStyle = fillColor;
-      ctx.fill(path);
-      ctx.strokeStyle = strokeColor;
-      ctx.stroke(path);
-    }
+    ctx.translate(lineWidth, 0);
+    ctx.lineWidth = lineWidth;
+    ctx.fillStyle = fillColor;
+    ctx.fill(path);
+    ctx.strokeStyle = strokeColor;
+    ctx.stroke(path);
     canvasLineWidth.current = lineWidth;
     canvasStrokeColor.current = strokeColor;
     canvasFillColor.current = fillColor;
