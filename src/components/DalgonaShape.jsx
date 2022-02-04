@@ -48,13 +48,23 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
     const strokeColor = "rgba(0, 0, 0, 255)";
     const fillColor = "rgba(255, 255, 254, 255)";
     let lineWidth =
-      ((svgData.dimensions.width / 30) * resolutionRatio) / compressionRatio;
+      (svgData.dimensions.width * resolutionRatio) / compressionRatio / 30;
     setWidth(
       (svgData.dimensions.width * resolutionRatio) / compressionRatio +
         lineWidth * 2
     );
-    setHeight((svgData.dimensions.height * resolutionRatio) / compressionRatio);
-
+    setHeight(
+      (svgData.dimensions.height * resolutionRatio) / compressionRatio +
+        lineWidth * 2
+    );
+    ctx.fillStyle = "blue";
+    ctx.fillRect(
+      0,
+      0,
+      (svgData.dimensions.width * resolutionRatio) / compressionRatio +
+        lineWidth * 2,
+      (svgData.dimensions.height * resolutionRatio) / compressionRatio
+    );
     if (svgData.name === "circle") {
       path = new Path2D();
       path.arc(
@@ -91,7 +101,12 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
       canvasStrokeColor.current
     ) {
       ctx.fillStyle = "red";
-      ctx.fillRect(x, y, canvasLineWidth.current, canvasLineWidth.current);
+      ctx.fillRect(
+        x - canvasLineWidth.current / 0.75,
+        y - canvasLineWidth.current / 2,
+        canvasLineWidth.current,
+        canvasLineWidth.current
+      );
     } else if (
       `rgba(${imageData[0]}, ${imageData[1]}, ${imageData[2]}, ${imageData[3]})` ===
       canvasFillColor.current
