@@ -101,12 +101,15 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
       canvasStrokeColor.current
     ) {
       ctx.fillStyle = "red";
-      ctx.fillRect(
-        x - canvasLineWidth.current / 0.75,
-        y - canvasLineWidth.current / 2,
-        canvasLineWidth.current,
-        canvasLineWidth.current
+      ctx.arc(
+        x - canvasLineWidth.current,
+        y,
+        canvasLineWidth.current / 2,
+        0,
+        2 * Math.PI,
+        false
       );
+      ctx.fill();
     } else if (
       `rgba(${imageData[0]}, ${imageData[1]}, ${imageData[2]}, ${imageData[3]})` ===
       canvasFillColor.current
