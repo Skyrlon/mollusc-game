@@ -36,7 +36,6 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
 
   const canvasStrokeColor = useRef(null);
   const canvasFillColor = useRef(null);
-  const canvasResolutionRatio = useRef(null);
   const canvasLineWidth = useRef(null);
 
   const drawShape = (ctx) => {
@@ -44,43 +43,31 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
     const compressionRatio = parseInt(
       svgData.dimensions.width.toString().length
     );
+    const finalRatio = resolutionRatio / compressionRatio;
     let path = null;
     const strokeColor = "rgba(0, 0, 0, 255)";
     const fillColor = "rgba(255, 255, 254, 255)";
-    let lineWidth =
-      (svgData.dimensions.width * resolutionRatio) / compressionRatio / 30;
-    setWidth(
-      (svgData.dimensions.width * resolutionRatio) / compressionRatio +
-        lineWidth * 2
-    );
-    setHeight(
-      (svgData.dimensions.height * resolutionRatio) / compressionRatio +
-        lineWidth * 2
-    );
+    let lineWidth = (svgData.dimensions.width * finalRatio) / 30;
+    setWidth(svgData.dimensions.width * finalRatio + lineWidth * 2);
+    setHeight(svgData.dimensions.height * finalRatio + lineWidth * 2);
     ctx.fillStyle = "blue";
     ctx.fillRect(
       0,
       0,
-      (svgData.dimensions.width * resolutionRatio) / compressionRatio +
-        lineWidth * 2,
-      (svgData.dimensions.height * resolutionRatio) / compressionRatio
+      svgData.dimensions.width * finalRatio + lineWidth * 2,
+      svgData.dimensions.height * finalRatio
     );
     if (svgData.name === "circle") {
       path = new Path2D();
       path.arc(
-        (svgData.shape.cx * resolutionRatio) / compressionRatio,
-        (svgData.shape.cy * resolutionRatio) / compressionRatio,
-        (svgData.shape.r * resolutionRatio) / compressionRatio - lineWidth * 2,
+        svgData.shape.cx * finalRatio,
+        svgData.shape.cy * finalRatio,
+        svgData.shape.r * finalRatio - lineWidth * 2,
         0,
         Math.PI * 2
       );
     } else {
-      path = new Path2D(
-        multiplicateNumberInString(
-          svgData.shape,
-          resolutionRatio / compressionRatio
-        )
-      );
+      path = new Path2D(multiplicateNumberInString(svgData.shape, finalRatio));
     }
     ctx.translate(lineWidth, 0);
     ctx.lineWidth = lineWidth;
@@ -91,7 +78,6 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
     canvasLineWidth.current = lineWidth;
     canvasStrokeColor.current = strokeColor;
     canvasFillColor.current = fillColor;
-    canvasResolutionRatio.current = resolutionRatio;
   };
 
   const handleDrawing = ({ ctx, x, y }) => {
