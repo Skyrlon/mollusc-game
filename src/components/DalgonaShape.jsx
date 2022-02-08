@@ -37,6 +37,7 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
   const canvasStrokeColor = useRef(null);
   const canvasFillColor = useRef(null);
   const canvasLineWidth = useRef(null);
+  const outsideShapeColor = useRef(null);
 
   const drawShape = (ctx) => {
     const resolutionRatio = window.innerWidth / 100;
@@ -47,10 +48,11 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
     let path = null;
     const strokeColor = "rgba(0, 0, 0, 255)";
     const fillColor = "rgba(255, 255, 254, 255)";
+    const outsideColor = "rgba(0, 0, 255, 255)";
     let lineWidth = (svgData.dimensions.width * finalRatio) / 30;
     setWidth(svgData.dimensions.width * finalRatio + lineWidth * 2);
     setHeight(svgData.dimensions.height * finalRatio + lineWidth * 2);
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = outsideColor;
     ctx.fillRect(
       0,
       0,
@@ -78,26 +80,49 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
     canvasLineWidth.current = lineWidth;
     canvasStrokeColor.current = strokeColor;
     canvasFillColor.current = fillColor;
+    outsideShapeColor.current = outsideColor;
   };
 
   const handleDrawing = ({ ctx, x, y }) => {
-    const imageData = ctx.getImageData(x, y, 1, 1).data;
+    const imageData = ctx.getImageData(x, y, 1, 1);
+    const data = imageData.data;
     if (
-      `rgba(${imageData[0]}, ${imageData[1]}, ${imageData[2]}, ${imageData[3]})` ===
+      `rgba(${data[0]}, ${data[1]}, ${data[2]}, ${data[3]})` ===
       canvasStrokeColor.current
     ) {
-      ctx.fillStyle = "red";
-      ctx.arc(
-        x - canvasLineWidth.current,
-        y,
-        canvasLineWidth.current / 2,
-        0,
-        2 * Math.PI,
-        false
+      const drawZoneImageData = ctx.getImageData(
+        x - canvasLineWidth.current / 2,
+        y - canvasLineWidth.current / 2,
+        canvasLineWidth.current,
+        canvasLineWidth.current
       );
-      ctx.fill();
+
+      const drawZoneData = drawZoneImageData.data;
+
+      for (let i = 0; i < drawZoneData.length; i += 4) {
+        const pixelX = (i / 4) % drawZoneImageData.width;
+        const pixelY = Math.floor(i / 4 / drawZoneImageData.width);
+        if (
+          `rgba(${drawZoneData[i + 0]}, ${drawZoneData[i + 1]}, ${
+            drawZoneData[i + 2]
+          }, ${drawZoneData[i + 3]})` === canvasStrokeColor.current
+        ) {
+          const drawImageData = ctx.createImageData(1, 1);
+          for (let i = 0; i < drawImageData.data.length; i += 4) {
+            drawImageData.data[i + 0] = 255;
+            drawImageData.data[i + 1] = 0;
+            drawImageData.data[i + 2] = 0;
+            drawImageData.data[i + 3] = 255;
+          }
+          ctx.putImageData(
+            drawImageData,
+            x + pixelX - canvasLineWidth.current / 2,
+            y + pixelY - canvasLineWidth.current / 2
+          );
+        }
+      }
     } else if (
-      `rgba(${imageData[0]}, ${imageData[1]}, ${imageData[2]}, ${imageData[3]})` ===
+      `rgba(${data[0]}, ${data[1]}, ${data[2]}, ${data[3]})` ===
       canvasFillColor.current
     ) {
       onInteriorShapeDraw();
