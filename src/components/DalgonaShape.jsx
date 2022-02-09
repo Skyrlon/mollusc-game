@@ -88,7 +88,9 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
     const data = imageData.data;
     if (
       `rgba(${data[0]}, ${data[1]}, ${data[2]}, ${data[3]})` ===
-      canvasStrokeColor.current
+        canvasStrokeColor.current ||
+      `rgba(${data[0]}, ${data[1]}, ${data[2]}, ${data[3]})` ===
+        canvasStrokeColor.current
     ) {
       const drawZoneImageData = ctx.getImageData(
         x - canvasLineWidth.current / 2,
@@ -114,11 +116,23 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
           drawZoneImage.data[i + 1] = 0;
           drawZoneImage.data[i + 2] = 0;
           drawZoneImage.data[i + 3] = 255;
-        } else {
+        } else if (
+          `rgba(${drawZoneData[i + 0]}, ${drawZoneData[i + 1]}, ${
+            drawZoneData[i + 2]
+          }, ${drawZoneData[i + 3]})` === canvasFillColor.current ||
+          `rgba(${drawZoneData[i + 0]}, ${drawZoneData[i + 1]}, ${
+            drawZoneData[i + 2]
+          }, ${drawZoneData[i + 3]})` === outsideShapeColor.current
+        ) {
           drawZoneImage.data[i + 0] = drawZoneData[i + 0];
           drawZoneImage.data[i + 1] = drawZoneData[i + 1];
           drawZoneImage.data[i + 2] = drawZoneData[i + 2];
           drawZoneImage.data[i + 3] = drawZoneData[i + 3];
+        } else {
+          drawZoneImage.data[i + 0] = 255;
+          drawZoneImage.data[i + 1] = 0;
+          drawZoneImage.data[i + 2] = 0;
+          drawZoneImage.data[i + 3] = 255;
         }
       }
       createImageBitmap(drawZoneImage).then((res) => {
