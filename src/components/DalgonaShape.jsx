@@ -57,21 +57,21 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
       0,
       0,
       svgData.dimensions.width * finalRatio + lineWidth * 2,
-      svgData.dimensions.height * finalRatio
+      svgData.dimensions.height * finalRatio + lineWidth * 2
     );
     if (svgData.name === "circle") {
       path = new Path2D();
       path.arc(
         svgData.shape.cx * finalRatio,
         svgData.shape.cy * finalRatio,
-        svgData.shape.r * finalRatio - lineWidth * 2,
+        svgData.shape.r * finalRatio,
         0,
         Math.PI * 2
       );
     } else {
       path = new Path2D(multiplicateNumberInString(svgData.shape, finalRatio));
     }
-    ctx.translate(lineWidth, 0);
+    ctx.translate(lineWidth, lineWidth);
     ctx.lineWidth = lineWidth;
     ctx.fillStyle = fillColor;
     ctx.fill(path);
@@ -93,34 +93,53 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
       const drawZoneImageData = ctx.getImageData(
         x - canvasLineWidth.current / 2,
         y - canvasLineWidth.current / 2,
-        canvasLineWidth.current,
-        canvasLineWidth.current
+        canvasLineWidth.current * 1.5,
+        canvasLineWidth.current * 1.5
       );
 
       const drawZoneData = drawZoneImageData.data;
 
+      const drawZoneImage = ctx.createImageData(
+        canvasLineWidth.current * 1.5,
+        canvasLineWidth.current * 1.5
+      );
+
       for (let i = 0; i < drawZoneData.length; i += 4) {
-        const pixelX = (i / 4) % drawZoneImageData.width;
-        const pixelY = Math.floor(i / 4 / drawZoneImageData.width);
         if (
           `rgba(${drawZoneData[i + 0]}, ${drawZoneData[i + 1]}, ${
             drawZoneData[i + 2]
           }, ${drawZoneData[i + 3]})` === canvasStrokeColor.current
         ) {
-          const drawImageData = ctx.createImageData(1, 1);
-          for (let i = 0; i < drawImageData.data.length; i += 4) {
-            drawImageData.data[i + 0] = 255;
-            drawImageData.data[i + 1] = 0;
-            drawImageData.data[i + 2] = 0;
-            drawImageData.data[i + 3] = 255;
-          }
-          ctx.putImageData(
-            drawImageData,
-            x + pixelX - canvasLineWidth.current / 2,
-            y + pixelY - canvasLineWidth.current / 2
-          );
+          drawZoneImage.data[i + 0] = 255;
+          drawZoneImage.data[i + 1] = 0;
+          drawZoneImage.data[i + 2] = 0;
+          drawZoneImage.data[i + 3] = 255;
+        } else {
+          drawZoneImage.data[i + 0] = drawZoneData[i + 0];
+          drawZoneImage.data[i + 1] = drawZoneData[i + 1];
+          drawZoneImage.data[i + 2] = drawZoneData[i + 2];
+          drawZoneImage.data[i + 3] = drawZoneData[i + 3];
         }
       }
+      createImageBitmap(drawZoneImage).then((res) => {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(
+          x - (canvasLineWidth.current * 1.5) / 2,
+          y - (canvasLineWidth.current * 1.5) / 2,
+          canvasLineWidth.current * 0.75,
+          0,
+          Math.PI * 2,
+          false
+        );
+        ctx.clip();
+        ctx.drawImage(
+          res,
+          x - canvasLineWidth.current * 1.5,
+          y - canvasLineWidth.current * 1.5
+        );
+        ctx.restore();
+      });
     } else if (
       `rgba(${data[0]}, ${data[1]}, ${data[2]}, ${data[3]})` ===
       canvasFillColor.current
