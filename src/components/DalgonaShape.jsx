@@ -39,6 +39,8 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
   const canvasLineWidth = useRef(null);
   const outsideShapeColor = useRef(null);
 
+  const drawColor = [255, 0, 0, 255];
+
   const drawShape = (ctx) => {
     const resolutionRatio = window.innerWidth / 100;
     const compressionRatio = parseInt(
@@ -46,13 +48,13 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
     );
     const finalRatio = resolutionRatio / compressionRatio;
     let path = null;
-    const strokeColor = "rgba(0, 0, 0, 255)";
-    const fillColor = "rgba(255, 255, 254, 255)";
-    const outsideColor = "rgba(0, 0, 255, 255)";
+    const strokeColor = [0, 0, 0, 255];
+    const fillColor = [255, 255, 254, 255];
+    const outsideColor = [0, 0, 255, 255];
     let lineWidth = (svgData.dimensions.width * finalRatio) / 30;
     setWidth(svgData.dimensions.width * finalRatio + lineWidth * 2);
     setHeight(svgData.dimensions.height * finalRatio + lineWidth * 2);
-    ctx.fillStyle = outsideColor;
+    ctx.fillStyle = `rgba(${outsideColor[0]}, ${outsideColor[1]}, ${outsideColor[2]}, ${outsideColor[3]})`;
     ctx.fillRect(
       0,
       0,
@@ -73,9 +75,9 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
     }
     ctx.translate(lineWidth, lineWidth);
     ctx.lineWidth = lineWidth;
-    ctx.fillStyle = fillColor;
+    ctx.fillStyle = `rgba(${fillColor[0]}, ${fillColor[1]}, ${fillColor[2]}, ${fillColor[3]})`;
     ctx.fill(path);
-    ctx.strokeStyle = strokeColor;
+    ctx.strokeStyle = `rgba(${strokeColor[0]}, ${strokeColor[1]}, ${strokeColor[2]}, ${strokeColor[3]})`;
     ctx.stroke(path);
     canvasLineWidth.current = lineWidth;
     canvasStrokeColor.current = strokeColor;
@@ -83,34 +85,46 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
     outsideShapeColor.current = outsideColor;
   };
 
+  const getClosestColor = (colors, [r2, g2, b2]) => {
+    const [[closest_color_id]] = colors
+      .map(([id, r1, g1, b1]) => [
+        id,
+        Math.sqrt((r2 - r1) ** 2 + (g2 - g1) ** 2 + (b2 - b1) ** 2),
+      ])
+      .sort(([, d1], [, d2]) => d1 - d2);
+    return colors.find(([id]) => id === closest_color_id);
+  };
+
   const handleDrawing = ({ ctx, x, y }) => {
     const imageData = ctx.getImageData(x, y, 1, 1);
     const data = imageData.data;
     if (
       `rgba(${data[0]}, ${data[1]}, ${data[2]}, ${data[3]})` ===
-        canvasStrokeColor.current ||
+        `rgba(${canvasStrokeColor.current[0]}, ${canvasStrokeColor.current[1]}, ${canvasStrokeColor.current[2]}, ${canvasStrokeColor.current[3]})` ||
       `rgba(${data[0]}, ${data[1]}, ${data[2]}, ${data[3]})` ===
-        canvasStrokeColor.current
+        `rgba(${drawColor[0]}, ${drawColor[1]}, ${drawColor[2]}, ${drawColor[3]})`
     ) {
       const drawZoneImageData = ctx.getImageData(
-        x - canvasLineWidth.current / 2,
-        y - canvasLineWidth.current / 2,
-        canvasLineWidth.current * 1.5,
-        canvasLineWidth.current * 1.5
+        x - canvasLineWidth.current,
+        y - canvasLineWidth.current,
+        canvasLineWidth.current * 2,
+        canvasLineWidth.current * 2
       );
 
       const drawZoneData = drawZoneImageData.data;
 
       const drawZoneImage = ctx.createImageData(
-        canvasLineWidth.current * 1.5,
-        canvasLineWidth.current * 1.5
+        canvasLineWidth.current * 2,
+        canvasLineWidth.current * 2
       );
-
       for (let i = 0; i < drawZoneData.length; i += 4) {
         if (
           `rgba(${drawZoneData[i + 0]}, ${drawZoneData[i + 1]}, ${
             drawZoneData[i + 2]
-          }, ${drawZoneData[i + 3]})` === canvasStrokeColor.current
+          }, ${drawZoneData[i + 3]})` ===
+            `rgba(${canvasStrokeColor.current[0]}, ${canvasStrokeColor.current[1]}, ${canvasStrokeColor.current[2]}, ${canvasStrokeColor.current[3]})` ||
+          `rgba(${data[0]}, ${data[1]}, ${data[2]}, ${data[3]})` ===
+            `rgba(${drawColor[0]}, ${drawColor[1]}, ${drawColor[2]}, ${drawColor[3]})`
         ) {
           drawZoneImage.data[i + 0] = 255;
           drawZoneImage.data[i + 1] = 0;
@@ -119,19 +133,30 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
         } else if (
           `rgba(${drawZoneData[i + 0]}, ${drawZoneData[i + 1]}, ${
             drawZoneData[i + 2]
-          }, ${drawZoneData[i + 3]})` === canvasFillColor.current ||
+          }, ${drawZoneData[i + 3]})` ===
+            `rgba(${canvasFillColor.current[0]}, ${canvasFillColor.current[1]}, ${canvasFillColor.current[2]}, ${canvasFillColor.current[3]})` ||
           `rgba(${drawZoneData[i + 0]}, ${drawZoneData[i + 1]}, ${
             drawZoneData[i + 2]
-          }, ${drawZoneData[i + 3]})` === outsideShapeColor.current
+          }, ${drawZoneData[i + 3]})` ===
+            `rgba(${outsideShapeColor.current[0]}, ${outsideShapeColor.current[1]}, ${outsideShapeColor.current[2]}, ${outsideShapeColor.current[3]})`
         ) {
           drawZoneImage.data[i + 0] = drawZoneData[i + 0];
           drawZoneImage.data[i + 1] = drawZoneData[i + 1];
           drawZoneImage.data[i + 2] = drawZoneData[i + 2];
           drawZoneImage.data[i + 3] = drawZoneData[i + 3];
         } else {
-          drawZoneImage.data[i + 0] = 255;
-          drawZoneImage.data[i + 1] = 0;
-          drawZoneImage.data[i + 2] = 0;
+          const closestColor = getClosestColor(
+            [
+              drawColor,
+              canvasStrokeColor.current,
+              canvasFillColor.current,
+              outsideShapeColor.current,
+            ],
+            [drawZoneData[i + 0], drawZoneData[i + 1], drawZoneData[i + 2]]
+          );
+          drawZoneImage.data[i + 0] = closestColor[0];
+          drawZoneImage.data[i + 1] = closestColor[1];
+          drawZoneImage.data[i + 2] = closestColor[2];
           drawZoneImage.data[i + 3] = 255;
         }
       }
@@ -139,9 +164,9 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
         ctx.save();
         ctx.beginPath();
         ctx.arc(
-          x - (canvasLineWidth.current * 1.5) / 2,
-          y - (canvasLineWidth.current * 1.5) / 2,
-          canvasLineWidth.current * 0.75,
+          x - canvasLineWidth.current,
+          y - canvasLineWidth.current,
+          canvasLineWidth.current,
           0,
           Math.PI * 2,
           false
@@ -149,14 +174,14 @@ export default function DalgonasvgData({ svgData, onInteriorShapeDraw }) {
         ctx.clip();
         ctx.drawImage(
           res,
-          x - canvasLineWidth.current * 1.5,
-          y - canvasLineWidth.current * 1.5
+          x - canvasLineWidth.current * 2,
+          y - canvasLineWidth.current * 2
         );
         ctx.restore();
       });
     } else if (
       `rgba(${data[0]}, ${data[1]}, ${data[2]}, ${data[3]})` ===
-      canvasFillColor.current
+      `rgba(${canvasFillColor.current[0]}, ${canvasFillColor.current[1]}, ${canvasFillColor.current[2]}, ${canvasFillColor.current[3]})`
     ) {
       onInteriorShapeDraw();
     }
